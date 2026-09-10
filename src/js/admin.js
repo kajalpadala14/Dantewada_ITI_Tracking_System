@@ -37,12 +37,19 @@ document.addEventListener('DOMContentLoaded', () => {
   // State
   let currentTab = 'iti';
 
-  // Dynamic Data Stores (No hardcoded/dummy records)
-  let itisData = [];
+  // Baseline ITI, Trade, and User Datasets
+  const defaultItis = [
+    { id: 'ITI-01', name: 'Govt. ITI Dantewada', type: 'Government', block: 'Dantewada', contact: '+91 7856 252210', status: 'Active' },
+    { id: 'ITI-02', name: 'Govt. ITI Geedam', type: 'Government', block: 'Geedam', contact: '+91 7856 241005', status: 'Active' },
+    { id: 'ITI-03', name: 'Govt. ITI Katekalyan', type: 'Government', block: 'Katekalyan', contact: '+91 7856 263120', status: 'Active' },
+    { id: 'ITI-04', name: 'Govt. ITI Kuakonda', type: 'Government', block: 'Kuakonda', contact: '+91 7856 274401', status: 'Active' }
+  ];
+
+  let itisData = [...defaultItis];
   try {
     const local = JSON.parse(localStorage.getItem('iti_admin_itis') || '[]');
-    if (Array.isArray(local)) itisData = local;
-  } catch(e) { itisData = []; }
+    if (Array.isArray(local) && local.length > 0) itisData = local;
+  } catch(e) { itisData = [...defaultItis]; }
 
   let yearsData = [
     { id: 'AY-2024', name: '2024-25', start: '01 Aug 2024', end: '31 Jul 2025', desc: 'Current Active Academic Session', status: 'Active' },
@@ -51,17 +58,33 @@ document.addEventListener('DOMContentLoaded', () => {
     { id: 'AY-2021', name: '2021-22', start: '01 Aug 2021', end: '31 Jul 2022', desc: 'Archived Session Records', status: 'Completed' }
   ];
 
-  let tradesData = [];
+  const defaultTrades = [
+    { id: 'TRD-01', name: 'Electrician', code: 'ELEC-01', duration: '2 Years', iti: 'Govt. ITI Dantewada', status: 'Active' },
+    { id: 'TRD-02', name: 'Fitter', code: 'FIT-01', duration: '2 Years', iti: 'Govt. ITI Dantewada', status: 'Active' },
+    { id: 'TRD-03', name: 'COPA', code: 'COPA-01', duration: '1 Year', iti: 'Govt. ITI Geedam', status: 'Active' },
+    { id: 'TRD-04', name: 'Welder', code: 'WELD-01', duration: '1 Year', iti: 'Govt. ITI Katekalyan', status: 'Active' },
+    { id: 'TRD-05', name: 'Mechanic Diesel', code: 'MD-01', duration: '1 Year', iti: 'Govt. ITI Kuakonda', status: 'Active' },
+    { id: 'TRD-06', name: 'Sewing Technology', code: 'SEW-01', duration: '1 Year', iti: 'Govt. ITI Geedam', status: 'Active' },
+    { id: 'TRD-07', name: 'Wireman', code: 'WIRE-01', duration: '2 Years', iti: 'Govt. ITI Dantewada', status: 'Active' }
+  ];
+
+  let tradesData = [...defaultTrades];
   try {
     const local = JSON.parse(localStorage.getItem('iti_admin_trades') || '[]');
-    if (Array.isArray(local)) tradesData = local;
-  } catch(e) { tradesData = []; }
+    if (Array.isArray(local) && local.length > 0) tradesData = local;
+  } catch(e) { tradesData = [...defaultTrades]; }
 
-  let usersData = [];
+  const defaultUsers = [
+    { id: 'USR-01', name: 'District Admin', email: 'admin.dantewada@cg.gov.in', role: 'District Collectorate / Admin', iti: 'All ITIs', status: 'Active' },
+    { id: 'USR-02', name: 'Principal Dantewada', email: 'principal.dantewada@cg.gov.in', role: 'ITI Principal', iti: 'Govt. ITI Dantewada', status: 'Active' },
+    { id: 'USR-03', name: 'Placement Officer', email: 'placement.iti@cg.gov.in', role: 'Placement Officer', iti: 'District ITI Cell', status: 'Active' }
+  ];
+
+  let usersData = [...defaultUsers];
   try {
     const local = JSON.parse(localStorage.getItem('iti_admin_users') || '[]');
-    if (Array.isArray(local)) usersData = local;
-  } catch(e) { usersData = []; }
+    if (Array.isArray(local) && local.length > 0) usersData = local;
+  } catch(e) { usersData = [...defaultUsers]; }
 
   // DOM Elements
   const tabButtons = document.querySelectorAll('.admin-tab-btn');

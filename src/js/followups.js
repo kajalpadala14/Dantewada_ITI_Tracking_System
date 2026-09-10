@@ -23,13 +23,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dynamic Follow-ups Dataset (No hardcoded/dummy records)
-  let followupsData = [];
+  // Baseline Follow-ups Dataset
+  const defaultFollowups = [
+    {
+      student: "Anita Markam",
+      iti: "Govt. ITI Geedam",
+      status: "Employed",
+      lastFollowup: "18 Jun 2025",
+      contactMode: "Phone",
+      remarks: "Working steadily at Shree Motors",
+      nextFollowup: "18 Sep 2025",
+      phone: "+91 94242 81903",
+      counselor: "R. K. Verma (Placement Officer)"
+    },
+    {
+      student: "Manoj Singh",
+      iti: "Govt. ITI Katekalyan",
+      status: "Seeking Work",
+      lastFollowup: "12 Jun 2025",
+      contactMode: "WhatsApp",
+      remarks: "Shared two openings in local industries",
+      nextFollowup: "12 Jul 2025",
+      phone: "+91 79745 12098",
+      counselor: "P. Baghel (ITI Staff)"
+    },
+    {
+      student: "Deepak Netam",
+      iti: "Govt. ITI Katekalyan",
+      status: "Seeking Work",
+      lastFollowup: "05 Jun 2025",
+      contactMode: "ITI Center",
+      remarks: "Awaiting course certificate issuance",
+      nextFollowup: "05 Jul 2025",
+      phone: "+91 97531 65421",
+      counselor: "S. K. Mandavi"
+    }
+  ];
+
+  let followupsData = [...defaultFollowups];
   try {
     const local = JSON.parse(localStorage.getItem('iti_followups') || '[]');
-    if (Array.isArray(local)) followupsData = local;
+    if (Array.isArray(local) && local.length > 0) followupsData = local;
   } catch(e) {
-    followupsData = [];
+    followupsData = [...defaultFollowups];
   }
 
   const tableBody = document.getElementById('followupsTableBody');

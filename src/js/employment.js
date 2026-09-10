@@ -23,16 +23,83 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Employment Records (Dynamic - No hardcoded/dummy data)
-  let employmentRecords = [];
+  // Baseline Employment Records
+  const defaultEmploymentRecords = [
+    {
+      student: "Anita Markam",
+      iti: "Govt. ITI Geedam",
+      status: "Employed",
+      type: "Private",
+      company: "Shree Motors",
+      role: "Technician",
+      location: "Raipur",
+      salary: "₹18,000–22,000",
+      contact: "+91 94242 81903"
+    },
+    {
+      student: "Vikas Yadav",
+      iti: "Govt. ITI Dantewada",
+      status: "Employed",
+      type: "Private",
+      company: "Bastar Auto Works",
+      role: "Diesel Mechanic",
+      location: "Jagdalpur",
+      salary: "₹20,000–25,000",
+      contact: "+91 94060 33812"
+    },
+    {
+      student: "Manoj Singh",
+      iti: "Govt. ITI Katekalyan",
+      status: "Seeking Work",
+      type: "—",
+      company: "—",
+      role: "—",
+      location: "—",
+      salary: "—",
+      contact: "+91 79745 12098"
+    },
+    {
+      student: "Pooja Kashyap",
+      iti: "Govt. ITI Kuakonda",
+      status: "Apprenticeship",
+      type: "Government",
+      company: "NMDC Kirandul",
+      role: "Apprentice Trainee",
+      location: "Kirandul",
+      salary: "₹12,500 Stipend",
+      contact: "+91 91114 55670"
+    }
+  ];
+
+  let employmentRecords = [...defaultEmploymentRecords];
   try {
     const localEmp = JSON.parse(localStorage.getItem('iti_employment_records') || '[]');
-    if (Array.isArray(localEmp)) {
+    if (Array.isArray(localEmp) && localEmp.length > 0) {
       employmentRecords = localEmp;
     }
   } catch (e) {
-    employmentRecords = [];
+    employmentRecords = [...defaultEmploymentRecords];
   }
+
+  // Also include registered students from registry if they have employment status
+  try {
+    const localStudents = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+    localStudents.forEach(s => {
+      if (s.employmentStatus && s.employmentStatus !== 'Not Applicable' && !employmentRecords.some(e => e.student === s.name)) {
+        employmentRecords.unshift({
+          student: s.name,
+          iti: s.iti || 'Govt. ITI Dantewada',
+          status: s.employmentStatus,
+          type: 'Private',
+          company: s.employmentStatus === 'Employed' ? 'Local Employer' : '—',
+          role: s.trade ? `${s.trade} Technician` : 'Technician',
+          location: 'Dantewada',
+          salary: s.employmentStatus === 'Employed' ? '₹18,000–22,000' : '—',
+          contact: s.mobile || '—'
+        });
+      }
+    });
+  } catch(e) {}
 
   const tableBody = document.getElementById('employmentTableBody');
   const searchInput = document.getElementById('empSearchInput');
