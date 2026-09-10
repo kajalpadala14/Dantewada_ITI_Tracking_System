@@ -72,42 +72,17 @@ const APP_CONFIG = {
 // Make accessible globally
 window.APP_CONFIG = APP_CONFIG;
 
-// Dynamically resolve APPS_SCRIPT_WEB_APP_URL across Node.js, VS Code Live Server (port 5500), and static environments
+// Dynamically resolve APPS_SCRIPT_WEB_APP_URL securely from backend server /api/config
 window.loadConfigPromise = (async function initEnvConfig() {
   if (typeof window === 'undefined') return '';
 
-  // 1. Check window.__ENV__ (loaded via env.js)
-  if (window.__ENV__ && window.__ENV__.APPS_SCRIPT_WEB_APP_URL) {
-    const u = window.__ENV__.APPS_SCRIPT_WEB_APP_URL.trim();
-    APP_CONFIG.GOOGLE_SHEET.APPS_SCRIPT_WEB_APP_URL = u;
-    localStorage.setItem('iti_apps_script_url', u);
-    return u;
-  }
-
-  // 2. Check cached URL in localStorage (fast)
+  // 1. Check cached URL in localStorage (fast)
   const cachedUrl = localStorage.getItem('iti_apps_script_url');
   if (cachedUrl && cachedUrl.trim()) {
     APP_CONFIG.GOOGLE_SHEET.APPS_SCRIPT_WEB_APP_URL = cachedUrl.trim();
   }
 
-  // 3. Try reading env.json (Supported by VS Code Live Server without 404)
-  const jsonCandidates = ['/env.json', '../env.json', '../../env.json', 'env.json'];
-  for (const jsonPath of jsonCandidates) {
-    try {
-      const res = await fetch(jsonPath);
-      if (res.ok) {
-        const data = await res.json();
-        if (data && data.APPS_SCRIPT_WEB_APP_URL) {
-          const u = data.APPS_SCRIPT_WEB_APP_URL.trim();
-          APP_CONFIG.GOOGLE_SHEET.APPS_SCRIPT_WEB_APP_URL = u;
-          localStorage.setItem('iti_apps_script_url', u);
-          return u;
-        }
-      }
-    } catch (e) {}
-  }
-
-  // 4. Try same-origin /api/config (when running via node server.js on port 3000)
+  // 2. Try same-origin /api/config (when running via server.js or production host)
   try {
     const res = await fetch('/api/config');
     if (res.ok) {
@@ -121,7 +96,7 @@ window.loadConfigPromise = (async function initEnvConfig() {
     }
   } catch (e) {}
 
-  // 5. Try http://localhost:3000/api/config (when running frontend on Live Server 5500 alongside node server.js)
+  // 3. Try http://localhost:3000/api/config (when running frontend on Live Server port alongside backend server)
   try {
     const res = await fetch('http://localhost:3000/api/config');
     if (res.ok) {
@@ -134,26 +109,6 @@ window.loadConfigPromise = (async function initEnvConfig() {
       }
     }
   } catch (e) {}
-
-  // 6. Try reading .env directly via static server
-  const envCandidates = ['/.env', '../.env', '../../.env', '.env'];
-  for (const envPath of envCandidates) {
-    try {
-      const res = await fetch(envPath);
-      if (res.ok) {
-        const text = await res.text();
-        const match = text.match(/APPS_SCRIPT_WEB_APP_URL\s*=\s*([^\r\n]+)/);
-        if (match && match[1]) {
-          const u = match[1].trim().replace(/^["']|["']$/g, '');
-          if (u && u.startsWith('http')) {
-            APP_CONFIG.GOOGLE_SHEET.APPS_SCRIPT_WEB_APP_URL = u;
-            localStorage.setItem('iti_apps_script_url', u);
-            return u;
-          }
-        }
-      }
-    } catch (e) {}
-  }
 
   return APP_CONFIG.GOOGLE_SHEET.APPS_SCRIPT_WEB_APP_URL || '';
 })();
