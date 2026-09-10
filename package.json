@@ -1,0 +1,16 @@
+{
+  "name": "dantewada-iti-tracking-system",
+  "version": "1.0.0",
+  "description": "Dantewada ITI Student Tracking System",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "iti",
+    "tracking",
+    "system"
+  ],
+  "author": "",
+  "license": "MIT"
+}
