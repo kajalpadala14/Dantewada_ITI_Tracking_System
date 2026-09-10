@@ -62,12 +62,26 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  if (editPhoneInput) {
+    editPhoneInput.setAttribute('maxlength', '10');
+    editPhoneInput.setAttribute('inputmode', 'numeric');
+    editPhoneInput.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+    });
+  }
+
   if (btnProfileModalSave) {
     btnProfileModalSave.addEventListener('click', () => {
       const name = editNameInput.value.trim();
       const phone = editPhoneInput.value.trim();
       const email = editEmailInput.value.trim();
       const address = editAddressInput.value.trim();
+
+      if (phone && !/^[6-9]\d{9}$/.test(phone)) {
+        alert('कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें (6, 7, 8 या 9 से शुरू होने वाले 10 अंक)।');
+        if (editPhoneInput) editPhoneInput.focus();
+        return;
+      }
 
       if (name) {
         if (dispName) dispName.textContent = name;

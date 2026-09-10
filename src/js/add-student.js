@@ -15,6 +15,17 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('open'));
   }
 
+  // Restrict phone numbers to 10 digits and numbers only
+  ['addStuMobile', 'addStuAltMobile'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.setAttribute('maxlength', '10');
+      el.setAttribute('inputmode', 'numeric');
+      el.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+      });
+    }
+  });
 
   // Main Form Submit Handler
   const form = document.getElementById('mainAddStudentForm');
@@ -23,6 +34,24 @@ document.addEventListener('DOMContentLoaded', () => {
   if (form) {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      // Mobile Number validation (must be exactly 10 digits starting with 6-9)
+      const mobileInput = document.getElementById('addStuMobile');
+      const mobileVal = (mobileInput?.value || '').trim();
+      if (!/^[6-9]\d{9}$/.test(mobileVal)) {
+        alert('कृपया 10 अंकों का मान्य मोबाइल नंबर दर्ज करें (6, 7, 8 या 9 से शुरू होने वाले 10 अंक)।');
+        if (mobileInput) mobileInput.focus();
+        return;
+      }
+
+      // Alternate Mobile Number validation (optional, but if given must be 10 digits starting with 6-9)
+      const altMobileInput = document.getElementById('addStuAltMobile');
+      const altMobileVal = (altMobileInput?.value || '').trim();
+      if (altMobileVal && !/^[6-9]\d{9}$/.test(altMobileVal)) {
+        alert('कृपया 10 अंकों का मान्य Alternate Mobile Number दर्ज करें।');
+        if (altMobileInput) altMobileInput.focus();
+        return;
+      }
 
       if (btnSave) {
         btnSave.disabled = true;

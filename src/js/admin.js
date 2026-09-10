@@ -96,6 +96,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!adminModal) return;
     modalTitle.textContent = title;
     modalFormContainer.innerHTML = contentHtml;
+
+    // Restrict phone number inputs inside modal to 10 digits
+    const phoneInputs = modalFormContainer.querySelectorAll('input[type="tel"], input[placeholder*="phone" i], input[placeholder*="XXXXXX" i]');
+    phoneInputs.forEach(input => {
+      input.setAttribute('maxlength', '10');
+      input.setAttribute('inputmode', 'numeric');
+      input.addEventListener('input', (e) => {
+        e.target.value = e.target.value.replace(/\D/g, '').slice(0, 10);
+      });
+    });
+
     adminModal.style.display = 'flex';
   }
 
@@ -389,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="form-field">
               <label class="form-label">Phone Number</label>
-              <input type="text" class="form-input" placeholder="07856-XXXXXX">
+              <input type="tel" class="form-input" placeholder="10-digit phone number" maxlength="10">
             </div>
           </div>
         `);
@@ -509,7 +520,7 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="form-field">
           <label class="form-label">Phone Number</label>
-          <input type="text" class="form-input" value="${item.contactNumber}">
+          <input type="tel" class="form-input" value="${item.contactNumber}" maxlength="10" placeholder="10-digit phone number">
         </div>
       </div>
     `);
