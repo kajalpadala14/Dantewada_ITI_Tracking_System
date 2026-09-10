@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Profile - Dantewada ITI Student Tracking System</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Administration - Dantewada ITI Student Tracking System</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
   <div class="app-layout">
@@ -21,7 +21,7 @@
 
       <nav class="sidebar-menu">
         <div class="menu-section-label">MAIN MENU</div>
-        <a href="index.html" class="menu-item" id="navDashboard">
+        <a href="../../index.html" class="menu-item" id="navDashboard">
           <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="1"></rect>
             <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -102,8 +102,8 @@
         </a>
 
         <div class="menu-section-label">ADMINISTRATION</div>
-        <div class="menu-group" id="groupAdmin">
-          <div class="menu-item">
+        <div class="menu-group open" id="groupAdmin">
+          <div class="menu-item active">
             <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="12" cy="12" r="3"></circle>
               <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -114,24 +114,24 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="admin.html?tab=iti" class="submenu-item">ITI Management</a>
-            <a href="admin.html?tab=year" class="submenu-item">Academic Year</a>
-            <a href="admin.html?tab=trade" class="submenu-item">Trade Management</a>
-            <a href="admin.html?tab=user" class="submenu-item">User Management</a>
+            <a href="admin.html?tab=iti" class="submenu-item active" id="subIti">ITI Management</a>
+            <a href="admin.html?tab=year" class="submenu-item" id="subYear">Academic Year</a>
+            <a href="admin.html?tab=trade" class="submenu-item" id="subTrade">Trade Management</a>
+            <a href="admin.html?tab=user" class="submenu-item" id="subUser">User Management</a>
           </div>
         </div>
       </nav>
 
       <!-- Sidebar Footer (Profile & Logout) -->
       <div class="sidebar-footer">
-        <a href="profile.html" class="sidebar-footer-link active" style="color: #0284c7; font-weight: 600;">
+        <a href="profile.html" class="sidebar-footer-link">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
           <span>Profile</span>
         </a>
-        <a href="#" class="sidebar-footer-link" onclick="alert('Session logged out successfully.');">
+        <a href="#" class="sidebar-footer-link">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
             <polyline points="16 17 21 12 16 7"></polyline>
@@ -157,7 +157,7 @@
           <div class="breadcrumbs">
             <span class="breadcrumb-item">Rozgar Vibhag</span>
             <span class="breadcrumb-separator">&rsaquo;</span>
-            <span class="breadcrumb-item active">profile</span>
+            <span class="breadcrumb-item active">admin</span>
           </div>
         </div>
 
@@ -180,157 +180,66 @@
         </div>
       </header>
 
-      <!-- MAIN CONTENT: OFFICER PROFILE (NOT STUDENT) -->
+      <!-- MAIN CONTENT: ADMINISTRATION (Matching Screenshot media_1789018107885.png) -->
       <main class="content-area">
-        <!-- Subtitle & Page Title Row with Edit Profile Button -->
+        <!-- Subtitle & Page Title Row with Add Button -->
         <div style="color: #0284c7; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px;">
-          ADMINISTRATIVE ACCOUNT
+          SYSTEM CONFIGURATION
         </div>
         <div class="dashboard-header-row" style="margin-bottom: 20px;">
-          <h1 class="page-title">Officer Profile</h1>
-          <button class="btn-primary-add" id="btnEditProfile">
-            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M12 20h9"></path>
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+          <h1 class="page-title">Administration</h1>
+          <button class="btn-primary-add" id="btnAddAdminItem">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            <span>Edit Profile</span>
+            <span id="btnAddItemText">+ Add ITI</span>
           </button>
         </div>
 
-        <!-- PROFILE SUMMARY CARD (Matching Screenshot layout) -->
-        <div class="profile-header-card">
-          <div class="profile-header-left">
-            <div class="profile-large-avatar">AS</div>
-            <div>
-              <div class="profile-user-name" id="dispName">Admin User</div>
-              <div class="profile-user-meta">Super Admin &bull; Directorate of Employment &amp; Training</div>
-              <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
-                <span class="status-badge active">● Active</span>
-                <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 10px; font-weight: 600;">
-                  Role: Super Admin
-                </span>
-                <span style="font-size: 11px; background: #f1f5f9; color: #475569; padding: 2px 8px; border-radius: 10px; font-weight: 600;">
-                  ID: CG-DTW-ADM-01
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="profile-header-right">
-            <div class="profile-contact-item">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-              </svg>
-              <span id="dispPhone">+91 98765 43210</span>
-            </div>
-            <div class="profile-contact-item">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
-                <polyline points="22,6 12,13 2,6"></polyline>
-              </svg>
-              <span id="dispEmail">admin.dantewada@cgiti.gov.in</span>
-            </div>
-            <div class="profile-contact-item">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-              <span>Collectorate, Dantewada, Chhattisgarh</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- PROFILE TABS (Matching Screenshot tab design) -->
+        <!-- ADMINISTRATION TABS NAVIGATION (Matching Screenshot) -->
         <div class="admin-tabs-nav">
-          <button class="admin-tab-btn active" data-tab="basic">Basic Information</button>
-          <button class="admin-tab-btn" data-tab="roles">Roles &amp; Access Permissions</button>
-          <button class="admin-tab-btn" data-tab="jurisdiction">Assigned Jurisdiction</button>
-          <button class="admin-tab-btn" data-tab="activity">Audit &amp; Activity Log</button>
+          <button class="admin-tab-btn active" data-tab="iti">ITI Management</button>
+          <button class="admin-tab-btn" data-tab="year">Academic Year</button>
+          <button class="admin-tab-btn" data-tab="trade">Trade Management</button>
+          <button class="admin-tab-btn" data-tab="user">User Management</button>
         </div>
 
-        <!-- TWO COLUMN SECTION (Matching Screenshot card layout) -->
-        <div class="profile-content-grid">
-          <!-- LEFT CARD: Basic Information -->
-          <div class="table-card" style="padding: 24px;">
-            <h3 class="chart-title" style="margin-bottom: 4px;">Basic Information</h3>
-            <span class="chart-subtitle">Officer administrative profile and official contact details</span>
-
-            <div class="profile-info-grid">
-              <div class="profile-info-item">
-                <label>Full Officer Name</label>
-                <span id="infoName">Admin User</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Designation</label>
-                <span>District Nodal Officer / Super Admin</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Department</label>
-                <span>Directorate of Employment &amp; Training</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Employee Code</label>
-                <span>CG-DTW-ADM-01</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Date of Appointment</label>
-                <span>12 March 2020</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Gender</label>
-                <span>Male</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Mobile Number</label>
-                <span id="infoPhone">+91 98765 43210</span>
-              </div>
-              <div class="profile-info-item">
-                <label>Official Email</label>
-                <span id="infoEmail">admin.dantewada@cgiti.gov.in</span>
-              </div>
-              <div class="profile-info-item" style="grid-column: span 2;">
-                <label>Office Address</label>
-                <span id="infoAddress">District Employment Office, Collectorate Premises, Ward 06, Dantewada, Chhattisgarh - 494449</span>
-              </div>
+        <!-- TAB 1: ITI MANAGEMENT (Matching Screenshot Exactly) -->
+        <div class="table-card" id="tabContentIti">
+          <div class="preview-header-row">
+            <div>
+              <h3 class="chart-title" id="adminTableTitle">ITI Management</h3>
+              <span class="chart-subtitle" id="adminTableSubtitle">Manage approved district records and access</span>
+            </div>
+            <div class="search-box">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="adminSearchInput" placeholder="Search records...">
             </div>
           </div>
 
-          <!-- RIGHT CARD: Administrative Milestones Timeline -->
-          <div class="table-card" style="padding: 24px;">
-            <h3 class="chart-title" style="margin-bottom: 4px;">Administrative Journey</h3>
-            <span class="chart-subtitle">System appointments and verified milestones</span>
-
-            <div class="timeline-list">
-              <div class="timeline-item">
-                <div class="timeline-dot completed"></div>
-                <div class="timeline-title">Super Admin Role Assigned</div>
-                <div class="timeline-desc">Jan 2024 &bull; District Collectorate Order #402</div>
-              </div>
-
-              <div class="timeline-item">
-                <div class="timeline-dot completed"></div>
-                <div class="timeline-title">Annual ITI Verification</div>
-                <div class="timeline-desc">Examined all 4 ITIs in Dantewada District</div>
-              </div>
-
-              <div class="timeline-item">
-                <div class="timeline-dot completed"></div>
-                <div class="timeline-title">Mega Placement Drive 2024</div>
-                <div class="timeline-desc">Organized district job fair &bull; 614 placed</div>
-              </div>
-
-              <div class="timeline-item">
-                <div class="timeline-dot completed"></div>
-                <div class="timeline-title">Portal Admin Certification</div>
-                <div class="timeline-desc">System access &amp; nodal credentials approved</div>
-              </div>
-
-              <div class="timeline-item">
-                <div class="timeline-dot completed"></div>
-                <div class="timeline-title">Account Initialized</div>
-                <div class="timeline-desc">System access onboarding completed</div>
-              </div>
-            </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead id="adminTableHead">
+                <tr>
+                  <th>ITI ID</th>
+                  <th>ITI NAME</th>
+                  <th>ITI TYPE</th>
+                  <th>BLOCK</th>
+                  <th>DISTRICT</th>
+                  <th>CONTACT PERSON</th>
+                  <th>CONTACT NUMBER</th>
+                  <th>STATUS</th>
+                  <th>ACTIONS</th>
+                </tr>
+              </thead>
+              <tbody id="adminTableBody">
+                <!-- Dynamically populated via admin.js -->
+              </tbody>
+            </table>
           </div>
         </div>
 
@@ -343,38 +252,25 @@
     </div>
   </div>
 
-  <!-- EDIT PROFILE MODAL -->
-  <div class="modal-overlay" id="profileModal" style="display: none;">
-    <div class="modal-container" style="max-width: 500px;">
+  <!-- ADD / EDIT MODAL DIALOG -->
+  <div class="modal-overlay" id="adminModal" style="display: none;">
+    <div class="modal-container" style="max-width: 520px;">
       <div class="modal-header">
-        <h3 class="modal-title">Edit Officer Profile</h3>
-        <button class="modal-close-btn" id="modalProfileCloseBtn">&times;</button>
+        <h3 class="modal-title" id="modalTitle">Add New Record</h3>
+        <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
       </div>
-      <div class="modal-body" style="padding: 20px;">
-        <div class="form-field" style="margin-bottom: 14px;">
-          <label class="form-label">Full Name</label>
-          <input type="text" id="editNameInput" class="form-input" value="Admin User">
-        </div>
-        <div class="form-field" style="margin-bottom: 14px;">
-          <label class="form-label">Mobile Number</label>
-          <input type="text" id="editPhoneInput" class="form-input" value="+91 98765 43210">
-        </div>
-        <div class="form-field" style="margin-bottom: 14px;">
-          <label class="form-label">Official Email</label>
-          <input type="email" id="editEmailInput" class="form-input" value="admin.dantewada@cgiti.gov.in">
-        </div>
-        <div class="form-field" style="margin-bottom: 14px;">
-          <label class="form-label">Office Address</label>
-          <textarea id="editAddressInput" class="form-input" rows="3">District Employment Office, Collectorate Premises, Ward 06, Dantewada, Chhattisgarh - 494449</textarea>
-        </div>
+      <div class="modal-body" id="modalFormContainer">
+        <!-- Form injected dynamically -->
       </div>
       <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 16px 20px; border-top: 1px solid var(--border-color);">
-        <button class="btn-cancel-top" id="btnProfileModalCancel">Cancel</button>
-        <button class="btn-primary-add" id="btnProfileModalSave">Save Changes</button>
+        <button class="btn-cancel-top" id="btnModalCancel">Cancel</button>
+        <button class="btn-primary-add" id="btnModalSave">Save Record</button>
       </div>
     </div>
   </div>
 
-  <script src="profile.js"></script>
+    <script src="../js/config.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/admin.js"></script>
 </body>
 </html>

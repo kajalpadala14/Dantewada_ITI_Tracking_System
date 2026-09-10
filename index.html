@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dashboard - Dantewada ITI Student Tracking System</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="src/css/style.css">
   <!-- Chart.js CDN for Analytics Charts -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
 </head>
@@ -48,9 +48,9 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="students.html" class="submenu-item" id="navAllStudents">All Students</a>
-            <a href="add-student.html" class="submenu-item" id="navAddStudent">Add Student</a>
-            <a href="bulk-upload.html" class="submenu-item" id="navBulkUpload">Bulk Upload</a>
+            <a href="src/pages/students.html" class="submenu-item" id="navAllStudents">All Students</a>
+            <a href="src/pages/add-student.html" class="submenu-item" id="navAddStudent">Add Student</a>
+            <a href="src/pages/bulk-upload.html" class="submenu-item" id="navBulkUpload">Bulk Upload</a>
           </div>
         </div>
 
@@ -67,8 +67,8 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="employment.html" class="submenu-item">Employment Tracking</a>
-            <a href="followups.html" class="submenu-item">Follow-ups</a>
+            <a href="src/pages/employment.html" class="submenu-item">Employment Tracking</a>
+            <a href="src/pages/followups.html" class="submenu-item">Follow-ups</a>
           </div>
         </div>
 
@@ -86,15 +86,15 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="reports.html" class="submenu-item">Year-wise Report</a>
-            <a href="reports.html" class="submenu-item">ITI-wise Report</a>
-            <a href="reports.html" class="submenu-item">Trade-wise Report</a>
-            <a href="reports.html" class="submenu-item">Employment Report</a>
+            <a href="src/pages/reports.html" class="submenu-item">Year-wise Report</a>
+            <a href="src/pages/reports.html" class="submenu-item">ITI-wise Report</a>
+            <a href="src/pages/reports.html" class="submenu-item">Trade-wise Report</a>
+            <a href="src/pages/reports.html" class="submenu-item">Employment Report</a>
           </div>
         </div>
 
         <div class="menu-section-label">DOWNLOADS</div>
-        <a href="downloads.html" class="menu-item">
+        <a href="src/pages/downloads.html" class="menu-item">
           <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
             <polyline points="7 10 12 15 17 10"></polyline>
@@ -116,17 +116,17 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="admin.html?tab=iti" class="submenu-item">ITI Management</a>
-            <a href="admin.html?tab=year" class="submenu-item">Academic Year</a>
-            <a href="admin.html?tab=trade" class="submenu-item">Trade Management</a>
-            <a href="admin.html?tab=user" class="submenu-item">User Management</a>
+            <a href="src/pages/admin.html?tab=iti" class="submenu-item">ITI Management</a>
+            <a href="src/pages/admin.html?tab=year" class="submenu-item">Academic Year</a>
+            <a href="src/pages/admin.html?tab=trade" class="submenu-item">Trade Management</a>
+            <a href="src/pages/admin.html?tab=user" class="submenu-item">User Management</a>
           </div>
         </div>
       </nav>
 
       <!-- Sidebar Footer (Profile & Logout) -->
       <div class="sidebar-footer">
-        <a href="profile.html" class="sidebar-footer-link">
+        <a href="src/pages/profile.html" class="sidebar-footer-link">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
@@ -399,6 +399,8 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+    <script src="src/js/config.js"></script>
+  <script src="src/js/common.js"></script>
+  <script src="src/js/script.js"></script>
 </body>
 </html>

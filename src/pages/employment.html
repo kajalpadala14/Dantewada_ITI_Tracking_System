@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Follow-Ups - Dantewada ITI Student Tracking System</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Employment Tracking - Dantewada ITI Student Tracking System</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
   <div class="app-layout">
@@ -21,7 +21,7 @@
 
       <nav class="sidebar-menu">
         <div class="menu-section-label">MAIN MENU</div>
-        <a href="index.html" class="menu-item" id="navDashboard">
+        <a href="../../index.html" class="menu-item" id="navDashboard">
           <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="1"></rect>
             <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -65,8 +65,8 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="employment.html" class="submenu-item" id="navEmpTracking">Employment Tracking</a>
-            <a href="followups.html" class="submenu-item active" id="navFollowups">Follow-ups</a>
+            <a href="employment.html" class="submenu-item active" id="navEmpTracking">Employment Tracking</a>
+            <a href="followups.html" class="submenu-item" id="navFollowups">Follow-ups</a>
           </div>
         </div>
 
@@ -157,7 +157,7 @@
           <div class="breadcrumbs">
             <span class="breadcrumb-item">Rozgar Vibhag</span>
             <span class="breadcrumb-separator">&rsaquo;</span>
-            <span class="breadcrumb-item active">followups</span>
+            <span class="breadcrumb-item active">employment</span>
           </div>
         </div>
 
@@ -180,13 +180,22 @@
         </div>
       </header>
 
-      <!-- MAIN CONTENT: FOLLOW-UPS ONLY (Matching Screenshot media_1789017537438.png) -->
+      <!-- MAIN CONTENT: EMPLOYMENT TRACKING ONLY (Matching Screenshot media_1789017512707.png) -->
       <main class="content-area">
         <!-- Page Header Row -->
         <div class="student-registry-header">
           <div>
-            <span class="section-tagline">EMPLOYMENT / RELATIONSHIP MANAGEMENT</span>
-            <h1 class="page-title">Follow-Ups</h1>
+            <span class="section-tagline">EMPLOYMENT / STUDENT OUTCOMES</span>
+            <h1 class="page-title">Employment Tracking</h1>
+          </div>
+          <div>
+            <button class="btn-primary-add" id="btnUpdateEmployment">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+              </svg>
+              <span>Update Employment</span>
+            </button>
           </div>
         </div>
 
@@ -197,17 +206,17 @@
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="followupSearchInput" placeholder="Search student name or ID...">
+            <input type="text" id="empSearchInput" placeholder="Search student name or ID...">
           </div>
 
-          <select id="followupStatusFilter" class="registry-select">
+          <select id="empStatusFilter" class="registry-select">
             <option value="All">All Employment Status</option>
             <option value="Employed">Employed</option>
             <option value="Seeking Work">Seeking Work</option>
             <option value="Apprenticeship">Apprenticeship</option>
           </select>
 
-          <select id="followupItiFilter" class="registry-select">
+          <select id="empItiFilter" class="registry-select">
             <option value="All">All ITIs</option>
             <option value="ITI Geedam">ITI Geedam</option>
             <option value="ITI Dantewada">ITI Dantewada</option>
@@ -215,7 +224,7 @@
             <option value="ITI Kuakonda">ITI Kuakonda</option>
           </select>
 
-          <button class="btn-apply-filter" id="btnApplyFollowupFilter">
+          <button class="btn-apply-filter" id="btnApplyFilter">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
@@ -223,7 +232,7 @@
           </button>
         </div>
 
-        <!-- Follow-ups Table (Exact Data from Screenshot) -->
+        <!-- Employment Table (Exact Data from Screenshot) -->
         <div class="table-card">
           <div class="table-responsive">
             <table class="data-table">
@@ -232,15 +241,16 @@
                   <th>STUDENT</th>
                   <th>ITI</th>
                   <th>EMPLOYMENT STATUS</th>
-                  <th>LAST FOLLOW-UP</th>
-                  <th>CONTACT MODE</th>
-                  <th>REMARKS</th>
-                  <th>NEXT FOLLOW-UP</th>
+                  <th>EMPLOYMENT TYPE</th>
+                  <th>COMPANY / ORGANIZATION</th>
+                  <th>JOB ROLE</th>
+                  <th>JOB LOCATION</th>
+                  <th>SALARY RANGE</th>
                   <th class="text-right">ACTION</th>
                 </tr>
               </thead>
-              <tbody id="followupsTableBody">
-                <!-- Injected via followups.js -->
+              <tbody id="employmentTableBody">
+                <!-- Rendered dynamically via employment.js -->
               </tbody>
             </table>
           </div>
@@ -255,19 +265,21 @@
   </div>
 
   <!-- Detail Modal -->
-  <div class="modal-overlay" id="followupModal">
+  <div class="modal-overlay" id="empModal">
     <div class="modal-container">
       <div class="modal-header">
-        <h4 class="modal-title" id="followupModalTitle">Follow-Up History</h4>
-        <button class="modal-close-btn" id="followupModalCloseBtn">&times;</button>
+        <h4 class="modal-title" id="empModalTitle">Employment Record Details</h4>
+        <button class="modal-close-btn" id="empModalCloseBtn">&times;</button>
       </div>
-      <div class="modal-body" id="followupModalBody"></div>
+      <div class="modal-body" id="empModalBody"></div>
       <div class="modal-footer">
-        <button class="btn-secondary" id="followupModalCloseFooterBtn">Close</button>
+        <button class="btn-secondary" id="empModalCloseFooterBtn">Close</button>
       </div>
     </div>
   </div>
 
-  <script src="followups.js"></script>
+    <script src="../js/config.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/employment.js"></script>
 </body>
 </html>

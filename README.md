@@ -10,20 +10,50 @@ The system provides end-to-end tracking for ITI students across 4 Government ITI
 - **Govt. ITI Katekalyan**
 - **Govt. ITI Kuakonda**
 
-## 📂 System Architecture & Modules
+## 📂 Professional Project Directory Structure
 
-The portal is architected into 10 dedicated, independent modules:
-
-1. **Dashboard (`index.html`)**: District overview, 6 KPI cards, 4 analytical charts (ITI enrollment, career outcomes donut, trade distribution, year-wise trends).
-2. **Student Registry (`students.html`)**: Searchable and filterable student directory with status badges and detail view modals.
-3. **Add Student (`add-student.html`)**: Comprehensive 3-section student registration form with data quality validation rules.
-4. **Bulk Upload (`bulk-upload.html`)**: Drag-and-drop Excel/CSV spreadsheet importer with automated verification and summary metrics.
-5. **Employment Tracking (`employment.html`)**: Student placement outcomes, verified employers, designations, and salary range records.
-6. **Follow-ups (`followups.html`)**: Communication history tracking (Call/WhatsApp logs, remarks, and scheduled follow-up alerts).
-7. **Reports (`reports.html`)**: Advanced report generator with 4 filters (Year, ITI, Trade, Employment Status), quick cards, and CSV export.
-8. **Download Center (`downloads.html`)**: Export facility with preview table and Excel/CSV download capability.
-9. **Administration (`admin.html`)**: System configuration for ITI management, Academic sessions, Vocational trades, and Portal user permissions.
-10. **Officer Profile (`profile.html`)**: Dedicated administrative officer profile with contact details, administrative milestones timeline, and edit modal.
+```
+Dantewada_ITI_Tracking_System/
+│
+├── index.html                  # Main Dashboard (Root)
+├── server.js                   # Zero-dependency Node.js HTTP server
+├── README.md                   # Project documentation
+├── .gitignore                  # Git ignore rules
+│
+└── src/
+    │
+    ├── css/
+    │   └── style.css           # Global unified styles & responsive theme
+    │
+    ├── js/
+    │   ├── config.js           # Shared app configuration (API, institutions, trades)
+    │   ├── common.js           # Global UI utilities (sidebar drawer, accordion, toasts)
+    │   ├── script.js           # Dashboard Chart.js & metrics logic
+    │   ├── students.js         # Student registry & filter handlers
+    │   ├── add-student.js      # Student registration form handlers
+    │   ├── bulk-upload.js      # Drag-and-drop spreadsheet import & validation
+    │   ├── employment.js       # Career tracking, salary & placement modal
+    │   ├── followups.js        # Contact history logs & scheduled alerts
+    │   ├── reports.js          # Report generator & CSV export
+    │   ├── downloads.js        # Export center preview table & data download
+    │   ├── admin.js            # ITI, academic year, trade & user management
+    │   └── profile.js          # Officer administrative profile & edit modal
+    │
+    ├── pages/
+    │   ├── students.html       # All Students Registry
+    │   ├── add-student.html    # Add Student Form
+    │   ├── bulk-upload.html    # Bulk Upload Center
+    │   ├── employment.html     # Employment Tracking
+    │   ├── followups.html      # Student Follow-ups
+    │   ├── reports.html        # Analytical Reports
+    │   ├── downloads.html      # Data Download Center
+    │   ├── admin.html          # Administration & Settings
+    │   └── profile.html        # Officer Profile
+    │
+    └── assets/
+        ├── images/             # Static images
+        └── icons/              # Static icons
+```
 
 ## 🛠️ Technology Stack
 

@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Employment Tracking - Dantewada ITI Student Tracking System</title>
-  <link rel="stylesheet" href="style.css">
+  <title>All Students - Dantewada ITI Student Tracking System</title>
+  <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
   <div class="app-layout">
@@ -14,14 +14,14 @@
         <div class="brand-logo">D</div>
         <div class="brand-text">
           <span class="brand-title">Dantewada ITI</span>
-          <span class="brand-subtitle">Rozgar Vibhag Portal</span>
+          <span class="brand-subtitle">Tracker Admin Portal</span>
         </div>
         <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
       </div>
 
       <nav class="sidebar-menu">
-        <div class="menu-section-label">MAIN MENU</div>
-        <a href="index.html" class="menu-item" id="navDashboard">
+        <div class="menu-section-label">MAIN</div>
+        <a href="../../index.html" class="menu-item" id="navDashboard">
           <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="3" y="3" width="7" height="7" rx="1"></rect>
             <rect x="14" y="3" width="7" height="7" rx="1"></rect>
@@ -32,8 +32,8 @@
         </a>
 
         <div class="menu-section-label">STUDENTS</div>
-        <div class="menu-group" id="groupStudents">
-          <div class="menu-item" id="navStudentsHeader">
+        <div class="menu-group open" id="groupStudents">
+          <div class="menu-item active" id="navStudentsHeader">
             <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
               <circle cx="9" cy="7" r="4"></circle>
@@ -46,15 +46,15 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="students.html" class="submenu-item" id="navAllStudents">All Students</a>
+            <a href="students.html" class="submenu-item active" id="navAllStudents">All Students</a>
             <a href="add-student.html" class="submenu-item" id="navAddStudent">Add Student</a>
             <a href="bulk-upload.html" class="submenu-item" id="navBulkUpload">Bulk Upload</a>
           </div>
         </div>
 
         <div class="menu-section-label">EMPLOYMENT</div>
-        <div class="menu-group open" id="groupEmployment">
-          <div class="menu-item active" id="navEmploymentHeader">
+        <div class="menu-group" id="groupEmployment">
+          <div class="menu-item">
             <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
@@ -65,8 +65,8 @@
             </svg>
           </div>
           <div class="submenu">
-            <a href="employment.html" class="submenu-item active" id="navEmpTracking">Employment Tracking</a>
-            <a href="followups.html" class="submenu-item" id="navFollowups">Follow-ups</a>
+            <a href="employment.html" class="submenu-item">Employment Tracking</a>
+            <a href="followups.html" class="submenu-item">Follow-ups</a>
           </div>
         </div>
 
@@ -155,9 +155,9 @@
             </svg>
           </button>
           <div class="breadcrumbs">
-            <span class="breadcrumb-item">Rozgar Vibhag</span>
+            <span class="breadcrumb-item">Tracker Home</span>
             <span class="breadcrumb-separator">&rsaquo;</span>
-            <span class="breadcrumb-item active">employment</span>
+            <span class="breadcrumb-item active">Students</span>
           </div>
         </div>
 
@@ -170,94 +170,117 @@
             <span class="notification-indicator"></span>
           </button>
 
-          <a href="profile.html" class="user-profile" style="text-decoration: none; color: inherit;">
-            <div class="user-avatar">AS</div>
+          <div class="user-profile">
+            <div class="user-avatar">AD</div>
             <div class="user-info">
               <span class="user-name">Admin User</span>
-              <span class="user-role">Super Admin</span>
+              <span class="user-role">District Admin</span>
             </div>
-          </a>
+          </div>
         </div>
       </header>
 
-      <!-- MAIN CONTENT: EMPLOYMENT TRACKING ONLY (Matching Screenshot media_1789017512707.png) -->
+      <!-- MAIN CONTENT: ALL STUDENTS REGISTRY ONLY -->
       <main class="content-area">
         <!-- Page Header Row -->
         <div class="student-registry-header">
           <div>
-            <span class="section-tagline">EMPLOYMENT / STUDENT OUTCOMES</span>
-            <h1 class="page-title">Employment Tracking</h1>
+            <span class="section-tagline">STUDENT REGISTRY</span>
+            <h1 class="page-title">All Students</h1>
           </div>
           <div>
-            <button class="btn-primary-add" id="btnUpdateEmployment">
+            <a href="add-student.html" class="btn-primary-add" style="text-decoration: none;">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
               </svg>
-              <span>Update Employment</span>
-            </button>
+              <span>Add Student</span>
+            </a>
           </div>
         </div>
 
-        <!-- Filter Toolbar -->
+        <!-- Search & Filters Toolbar -->
         <div class="registry-filters-bar">
           <div class="registry-search-box">
             <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input type="text" id="empSearchInput" placeholder="Search student name or ID...">
+            <input type="text" id="registrySearchInput" placeholder="Search by name, ID or ITI...">
           </div>
 
-          <select id="empStatusFilter" class="registry-select">
-            <option value="All">All Employment Status</option>
-            <option value="Employed">Employed</option>
-            <option value="Seeking Work">Seeking Work</option>
-            <option value="Apprenticeship">Apprenticeship</option>
-          </select>
-
-          <select id="empItiFilter" class="registry-select">
+          <select id="registryItiFilter" class="registry-select">
             <option value="All">All ITIs</option>
-            <option value="ITI Geedam">ITI Geedam</option>
             <option value="ITI Dantewada">ITI Dantewada</option>
+            <option value="ITI Gidam">ITI Gidam</option>
             <option value="ITI Katekalyan">ITI Katekalyan</option>
             <option value="ITI Kuakonda">ITI Kuakonda</option>
           </select>
 
-          <button class="btn-apply-filter" id="btnApplyFilter">
+          <select id="registryYearFilter" class="registry-select">
+            <option value="All">All Academic Years</option>
+            <option value="2023-25">2023-25</option>
+            <option value="2022-24">2022-24</option>
+            <option value="2021-23">2021-23</option>
+            <option value="2023-24">2023-24</option>
+          </select>
+
+          <button class="btn-filter-toggle" id="btnFilterToggle">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
             </svg>
-            <span>Apply Filter</span>
+            <span>Filters</span>
           </button>
         </div>
 
-        <!-- Employment Table (Exact Data from Screenshot) -->
+        <!-- Meta Info & Column Configuration -->
+        <div class="registry-meta-bar">
+          <span id="registryMetaText"><strong>2,846</strong> records found | Updated today 10:12 AM</span>
+          <button class="btn-columns" title="Configure table columns">
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
+            </svg>
+            <span>Columns</span>
+          </button>
+        </div>
+
+        <!-- All Students Registry Table (Exact Layout & Data from Screenshot) -->
         <div class="table-card">
           <div class="table-responsive">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>STUDENT</th>
+                  <th>STUDENT ID</th>
+                  <th>STUDENT NAME</th>
                   <th>ITI</th>
+                  <th>TRADE</th>
+                  <th>ACADEMIC YEAR</th>
+                  <th>TRAINING STATUS</th>
                   <th>EMPLOYMENT STATUS</th>
-                  <th>EMPLOYMENT TYPE</th>
-                  <th>COMPANY / ORGANIZATION</th>
-                  <th>JOB ROLE</th>
-                  <th>JOB LOCATION</th>
-                  <th>SALARY RANGE</th>
-                  <th class="text-right">ACTION</th>
+                  <th class="text-right">ACTIONS</th>
                 </tr>
               </thead>
-              <tbody id="employmentTableBody">
-                <!-- Rendered dynamically via employment.js -->
+              <tbody id="registryTableBody">
+                <!-- Dynamically rendered via students.js -->
               </tbody>
             </table>
+          </div>
+
+          <!-- Table Pagination -->
+          <div class="table-footer">
+            <span id="registryPageInfo">Showing 1-7 of 2,846 students</span>
+            <div class="table-pagination">
+              <button class="page-nav-btn" disabled>&lsaquo;</button>
+              <button class="page-num-btn active">1</button>
+              <button class="page-num-btn">2</button>
+              <button class="page-num-btn">3</button>
+              <button class="page-nav-btn">&rsaquo;</button>
+            </div>
           </div>
         </div>
 
         <!-- FOOTER -->
-        <footer class="app-footer" style="margin-top: 40px;">
+        <footer class="app-footer">
           <p>&copy; 2025 Directorate of Employment - Government of Chhattisgarh</p>
         </footer>
       </main>
@@ -265,19 +288,21 @@
   </div>
 
   <!-- Detail Modal -->
-  <div class="modal-overlay" id="empModal">
+  <div class="modal-overlay" id="detailModal">
     <div class="modal-container">
       <div class="modal-header">
-        <h4 class="modal-title" id="empModalTitle">Employment Record Details</h4>
-        <button class="modal-close-btn" id="empModalCloseBtn">&times;</button>
+        <h4 class="modal-title" id="modalTitle">Student Tracking Details</h4>
+        <button class="modal-close-btn" id="modalCloseBtn">&times;</button>
       </div>
-      <div class="modal-body" id="empModalBody"></div>
+      <div class="modal-body" id="modalBody"></div>
       <div class="modal-footer">
-        <button class="btn-secondary" id="empModalCloseFooterBtn">Close</button>
+        <button class="btn-secondary" id="modalCloseFooterBtn">Close</button>
       </div>
     </div>
   </div>
 
-  <script src="employment.js"></script>
+    <script src="../js/config.js"></script>
+  <script src="../js/common.js"></script>
+  <script src="../js/students.js"></script>
 </body>
 </html>
