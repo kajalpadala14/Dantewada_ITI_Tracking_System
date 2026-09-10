@@ -1,0 +1,404 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard - Dantewada ITI Student Tracking System</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js CDN for Analytics Charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">D</div>
+        <div class="brand-text">
+          <span class="brand-title">Dantewada ITI</span>
+          <span class="brand-subtitle">Tracker Admin Portal</span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-section-label">MAIN</div>
+        <a href="index.html" class="menu-item active" id="navDashboard">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          <span class="menu-text">Dashboard</span>
+        </a>
+
+        <div class="menu-section-label">STUDENTS</div>
+        <div class="menu-group open" id="groupStudents">
+          <div class="menu-item" id="navStudentsHeader">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span class="menu-text">Students</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="students.html" class="submenu-item" id="navAllStudents">All Students</a>
+            <a href="add-student.html" class="submenu-item" id="navAddStudent">Add Student</a>
+            <a href="bulk-upload.html" class="submenu-item" id="navBulkUpload">Bulk Upload</a>
+          </div>
+        </div>
+
+        <div class="menu-section-label">EMPLOYMENT</div>
+        <div class="menu-group" id="groupEmployment">
+          <div class="menu-item">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            <span class="menu-text">Employment</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="employment.html" class="submenu-item">Employment Tracking</a>
+            <a href="followups.html" class="submenu-item">Follow-ups</a>
+          </div>
+        </div>
+
+        <div class="menu-section-label">REPORTS</div>
+        <div class="menu-group" id="groupReports">
+          <div class="menu-item">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="menu-text">Reports</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="reports.html" class="submenu-item">Year-wise Report</a>
+            <a href="reports.html" class="submenu-item">ITI-wise Report</a>
+            <a href="reports.html" class="submenu-item">Trade-wise Report</a>
+            <a href="reports.html" class="submenu-item">Employment Report</a>
+          </div>
+        </div>
+
+        <div class="menu-section-label">DOWNLOADS</div>
+        <a href="downloads.html" class="menu-item">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="menu-text">Download Center</span>
+        </a>
+
+        <div class="menu-section-label">ADMINISTRATION</div>
+        <div class="menu-group" id="groupAdmin">
+          <div class="menu-item">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span class="menu-text">Administration</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="admin.html?tab=iti" class="submenu-item">ITI Management</a>
+            <a href="admin.html?tab=year" class="submenu-item">Academic Year</a>
+            <a href="admin.html?tab=trade" class="submenu-item">Trade Management</a>
+            <a href="admin.html?tab=user" class="submenu-item">User Management</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer (Profile & Logout) -->
+      <div class="sidebar-footer">
+        <a href="profile.html" class="sidebar-footer-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile</span>
+        </a>
+        <a href="#" class="sidebar-footer-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="breadcrumbs">
+            <span class="breadcrumb-item">Tracker Home</span>
+            <span class="breadcrumb-separator">&rsaquo;</span>
+            <span class="breadcrumb-item active">Dashboard</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-button notification-btn" title="Notifications">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-indicator"></span>
+          </button>
+
+          <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+              <span class="user-name">Admin User</span>
+              <span class="user-role">District Admin</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT: DASHBOARD ONLY -->
+      <main class="content-area">
+        <!-- Subtitle & Page Heading Row -->
+        <div class="dashboard-header-row">
+          <div class="dashboard-titles">
+            <span class="section-tagline">DISTRICT OVERVIEW - OUTCOMES REPORT</span>
+            <h1 class="page-title">Dashboard</h1>
+          </div>
+          <div class="dashboard-actions">
+            <button class="btn-export" id="btnExport">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Export summary</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- HERO BANNER CARD -->
+        <section class="banner-card">
+          <div class="banner-content">
+            <span class="banner-tag">DISTRICT OVERVIEW</span>
+            <h2 class="banner-title">Student outcomes at a glance</h2>
+            <p class="banner-desc">Monitor vocational training progress and employment outcomes across four government ITIs in Dantewada District.</p>
+          </div>
+          <div class="banner-filter">
+            <div class="custom-select-wrapper">
+              <svg class="calendar-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+              <select id="academicYearSelect" class="session-select">
+                <option value="2024-25" selected>Academic year: 2024-25</option>
+                <option value="2023-24">Academic year: 2023-24</option>
+                <option value="2022-23">Academic year: 2022-23</option>
+                <option value="2021-22">Academic year: 2021-22</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <!-- KPI STAT CARDS ROW (Matching Reference Image) -->
+        <section class="stats-grid">
+          <!-- Card 1: Total Students -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Total Students</span>
+              <div class="stat-icon-wrapper icon-slate">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="9" cy="7" r="4"></circle>
+                  <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                  <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valTotalStudents">2,846</div>
+            <div class="stat-bottom">
+              <span class="stat-badge positive">+12% vs last year</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Current Year Students -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Current Year Students</span>
+              <div class="stat-icon-wrapper icon-blue">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path>
+                  <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valStudying">1,124</div>
+            <div class="stat-bottom">
+              <span class="stat-badge positive">+8% vs last year</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Passed Out Students -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Passed Out Students</span>
+              <div class="stat-icon-wrapper icon-teal">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valPassed">982</div>
+            <div class="stat-bottom">
+              <span class="stat-badge positive">+15% vs last year</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Employed Students -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Employed Students</span>
+              <div class="stat-icon-wrapper icon-green">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valPlaced">614</div>
+            <div class="stat-bottom">
+              <span class="stat-badge positive">+22% vs last year</span>
+            </div>
+          </div>
+
+          <!-- Card 5: Enrolled Apprentices -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Enrolled Apprentices</span>
+              <div class="stat-icon-wrapper icon-amber">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valApprenticeship">368</div>
+            <div class="stat-bottom">
+              <span class="stat-badge positive">+5% vs last year</span>
+            </div>
+          </div>
+
+          <!-- Card 6: Under Tracking -->
+          <div class="stat-card">
+            <div class="stat-top">
+              <span class="stat-label">Under Tracking</span>
+              <div class="stat-icon-wrapper icon-purple">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"></polygon>
+                </svg>
+              </div>
+            </div>
+            <div class="stat-value" id="valUntracked">1,500</div>
+            <div class="stat-bottom">
+              <span class="stat-badge positive">+3% vs last year</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTIC CHARTS ROW 1 (ITI Bar Chart & Employment Donut) -->
+        <section class="charts-row grid-2-col">
+          <div class="chart-card card-primary">
+            <div class="chart-header">
+              <div class="chart-title-group">
+                <h3 class="chart-title">ITI-wise Student Count</h3>
+                <span class="chart-subtitle">Enrolled across district institutions</span>
+              </div>
+              <button class="card-dots-btn" aria-label="More options">&hellip;</button>
+            </div>
+            <div class="chart-container" style="height: 270px;">
+              <canvas id="itiCountChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card card-secondary">
+            <div class="chart-header">
+              <div class="chart-title-group">
+                <h3 class="chart-title">Employment Status</h3>
+                <span class="chart-subtitle">Passed out students - 2023-24</span>
+              </div>
+              <button class="card-dots-btn" aria-label="More options">&hellip;</button>
+            </div>
+            <div class="chart-container donut-wrapper" style="height: 270px; position: relative;">
+              <canvas id="employmentDonutChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTIC CHARTS ROW 2 (Trade Horizontal & Year Trend Line) -->
+        <section class="charts-row grid-half-col">
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title-group">
+                <h3 class="chart-title">Trade-wise Student Count</h3>
+                <span class="chart-subtitle">Current active enrolments</span>
+              </div>
+              <button class="card-dots-btn" aria-label="More options">&hellip;</button>
+            </div>
+            <div class="chart-container" style="height: 250px;">
+              <canvas id="tradeChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-card">
+            <div class="chart-header">
+              <div class="chart-title-group">
+                <h3 class="chart-title">Year-wise Student Trend</h3>
+                <span class="chart-subtitle">Student enrolment over four academic years</span>
+              </div>
+              <button class="card-dots-btn" aria-label="More options">&hellip;</button>
+            </div>
+            <div class="chart-container" style="height: 250px;">
+              <canvas id="trendChart"></canvas>
+            </div>
+          </div>
+        </section>
+
+        <!-- FOOTER (Matching Reference Image) -->
+        <footer class="app-footer">
+          <p>&copy; 2025 Directorate of Employment - Government of Chhattisgarh</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,308 @@
+/* ==========================================================================
+   DANTEWADA ITI ALL STUDENTS REGISTRY - JAVASCRIPT
+   ========================================================================== */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Mobile Drawer Toggle
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+  const sidebarCloseBtn = document.getElementById('sidebarCloseBtn');
+
+  if (sidebarToggleBtn && sidebar) {
+    sidebarToggleBtn.addEventListener('click', () => sidebar.classList.add('open'));
+  }
+  if (sidebarCloseBtn && sidebar) {
+    sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('open'));
+  }
+
+  // Collapsible Menu Groups
+  document.querySelectorAll('.menu-group .menu-item').forEach(header => {
+    header.addEventListener('click', () => {
+      const parent = header.closest('.menu-group');
+      if (parent) parent.classList.toggle('open');
+    });
+  });
+
+  // --- Student Registry Dataset (Exact matches from media_1789016161661.png) ---
+  let studentsData = [
+    {
+      id: "STU-2023-0142",
+      name: "Rohit Kumar",
+      iti: "ITI Dantewada",
+      trade: "Fitter",
+      year: "2023-25",
+      trainingStatus: "Under Training",
+      employmentStatus: "Not Applicable",
+      mobile: "+91 98261 44102",
+      updated: "Today, 10:12 AM"
+    },
+    {
+      id: "STU-2022-0891",
+      name: "Anita Markam",
+      iti: "ITI Gidam",
+      trade: "Electrician",
+      year: "2022-24",
+      trainingStatus: "Passed",
+      employmentStatus: "Employed",
+      mobile: "+91 94242 81903",
+      updated: "Today, 09:45 AM"
+    },
+    {
+      id: "STU-2021-0412",
+      name: "Manoj Singh",
+      iti: "ITI Katekalyan",
+      trade: "Welder",
+      year: "2021-23",
+      trainingStatus: "Completed",
+      employmentStatus: "Seeking Work",
+      mobile: "+91 79745 12098",
+      updated: "Yesterday"
+    },
+    {
+      id: "STU-2023-1105",
+      name: "Sangeeta Mandavi",
+      iti: "ITI Kuakonda",
+      trade: "COPA",
+      year: "2023-24",
+      trainingStatus: "Under Training",
+      employmentStatus: "Not Applicable",
+      mobile: "+91 91310 98234",
+      updated: "08 Sep 2026"
+    },
+    {
+      id: "STU-2022-0764",
+      name: "Vikas Yadav",
+      iti: "ITI Dantewada",
+      trade: "Mechanic Diesel",
+      year: "2022-24",
+      trainingStatus: "Passed",
+      employmentStatus: "Employed",
+      mobile: "+91 94060 33812",
+      updated: "06 Sep 2026"
+    },
+    {
+      id: "STU-2023-0912",
+      name: "Kavita Diwan",
+      iti: "ITI Gidam",
+      trade: "Sewing Technology",
+      year: "2023-25",
+      trainingStatus: "Under Training",
+      employmentStatus: "Not Applicable",
+      mobile: "+91 88391 77210",
+      updated: "05 Sep 2026"
+    },
+    {
+      id: "STU-2022-0633",
+      name: "Deepak Netam",
+      iti: "ITI Katekalyan",
+      trade: "Electrician",
+      year: "2022-24",
+      trainingStatus: "Passed",
+      employmentStatus: "Seeking Work",
+      mobile: "+91 97531 65421",
+      updated: "04 Sep 2026"
+    }
+  ];
+
+  // Helper: Status Class mapping
+  function getTrainingBadgeClass(status) {
+    if (status === 'Under Training') return 'under-training';
+    if (status === 'Passed') return 'passed';
+    if (status === 'Completed') return 'completed';
+    return 'neutral';
+  }
+
+  function getEmploymentBadgeClass(status) {
+    if (status === 'Employed') return 'employed';
+    if (status === 'Seeking Work') return 'seeking-work';
+    if (status === 'Not Applicable') return 'not-applicable';
+    if (status === 'Apprenticeship') return 'apprenticeship';
+    return 'neutral';
+  }
+
+  function getInitials(name) {
+    return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+  }
+
+  const tableBody = document.getElementById('registryTableBody');
+  const searchInput = document.getElementById('registrySearchInput');
+  const itiFilter = document.getElementById('registryItiFilter');
+  const yearFilter = document.getElementById('registryYearFilter');
+  const pageInfo = document.getElementById('registryPageInfo');
+
+  function renderTable(data) {
+    if (!tableBody) return;
+    tableBody.innerHTML = '';
+
+    if (data.length === 0) {
+      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 32px; color: #94a3b8;">No matching student records found.</td></tr>`;
+      if (pageInfo) pageInfo.textContent = 'Showing 0 of 0 students';
+      return;
+    }
+
+    data.forEach(student => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td style="font-family: monospace; font-size: 12px; color: #475569;">${student.id}</td>
+        <td>
+          <div class="student-col">
+            <div class="student-avatar">${getInitials(student.name)}</div>
+            <div class="student-name-text">${student.name}</div>
+          </div>
+        </td>
+        <td>${student.iti}</td>
+        <td>${student.trade}</td>
+        <td>${student.year}</td>
+        <td>
+          <span class="status-badge ${getTrainingBadgeClass(student.trainingStatus)}">
+            ${student.trainingStatus}
+          </span>
+        </td>
+        <td>
+          <span class="status-badge ${getEmploymentBadgeClass(student.employmentStatus)}">
+            ${student.employmentStatus}
+          </span>
+        </td>
+        <td class="text-right">
+          <div class="action-icons-group">
+            <button class="btn-table-action btn-view" title="View details" data-id="${student.id}">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+            <button class="btn-table-action btn-edit" title="Edit student" data-id="${student.id}">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+              </svg>
+            </button>
+            <button class="btn-table-action btn-delete" title="Delete record" data-id="${student.id}">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+              </svg>
+            </button>
+          </div>
+        </td>
+      `;
+      tableBody.appendChild(row);
+    });
+
+    if (pageInfo) {
+      pageInfo.textContent = `Showing 1-${data.length} of 2,846 students`;
+    }
+
+    // Modal view listener
+    document.querySelectorAll('.btn-view').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        openDetailModal(id);
+      });
+    });
+
+    document.querySelectorAll('.btn-edit').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        alert(`Edit record for student ${id}`);
+      });
+    });
+
+    document.querySelectorAll('.btn-delete').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = e.currentTarget.getAttribute('data-id');
+        if (confirm(`Are you sure you want to delete student record ${id}?`)) {
+          studentsData = studentsData.filter(s => s.id !== id);
+          filterTable();
+        }
+      });
+    });
+  }
+
+  function filterTable() {
+    const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+    const iti = itiFilter ? itiFilter.value : 'All';
+    const year = yearFilter ? yearFilter.value : 'All';
+
+    const filtered = studentsData.filter(s => {
+      const matchQuery = s.name.toLowerCase().includes(query) ||
+                         s.id.toLowerCase().includes(query) ||
+                         s.trade.toLowerCase().includes(query) ||
+                         s.iti.toLowerCase().includes(query);
+      const matchIti = (iti === 'All') || (s.iti === iti);
+      const matchYear = (year === 'All') || (s.year === year);
+      return matchQuery && matchIti && matchYear;
+    });
+
+    renderTable(filtered);
+  }
+
+  if (searchInput) searchInput.addEventListener('input', filterTable);
+  if (itiFilter) itiFilter.addEventListener('change', filterTable);
+  if (yearFilter) yearFilter.addEventListener('change', filterTable);
+
+  renderTable(studentsData);
+
+  // Detail Modal
+  const modal = document.getElementById('detailModal');
+  const modalBody = document.getElementById('modalBody');
+  const modalCloseBtn = document.getElementById('modalCloseBtn');
+  const modalCloseFooterBtn = document.getElementById('modalCloseFooterBtn');
+
+  function openDetailModal(id) {
+    const s = studentsData.find(item => item.id === id);
+    if (!s || !modalBody) return;
+
+    modalBody.innerHTML = `
+      <div class="modal-detail-row">
+        <span class="detail-label">Student ID:</span>
+        <span class="detail-value">${s.id}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Full Name:</span>
+        <span class="detail-value">${s.name}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">ITI Institution:</span>
+        <span class="detail-value">${s.iti}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Trade:</span>
+        <span class="detail-value">${s.trade}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Academic Session:</span>
+        <span class="detail-value">${s.year}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Training Status:</span>
+        <span class="status-badge ${getTrainingBadgeClass(s.trainingStatus)}">${s.trainingStatus}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Employment Status:</span>
+        <span class="status-badge ${getEmploymentBadgeClass(s.employmentStatus)}">${s.employmentStatus}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Contact Mobile:</span>
+        <span class="detail-value">${s.mobile}</span>
+      </div>
+      <div class="modal-detail-row">
+        <span class="detail-label">Last Updated:</span>
+        <span class="detail-value">${s.updated}</span>
+      </div>
+    `;
+
+    if (modal) modal.classList.add('active');
+  }
+
+  function closeModal() {
+    if (modal) modal.classList.remove('active');
+  }
+
+  if (modalCloseBtn) modalCloseBtn.addEventListener('click', closeModal);
+  if (modalCloseFooterBtn) modalCloseFooterBtn.addEventListener('click', closeModal);
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeModal();
+    });
+  }
+});

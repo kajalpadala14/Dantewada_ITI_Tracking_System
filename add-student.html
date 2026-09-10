@@ -1,0 +1,489 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Student - Dantewada ITI Student Tracking System</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-logo">D</div>
+        <div class="brand-text">
+          <span class="brand-title">Dantewada ITI</span>
+          <span class="brand-subtitle">Tracker Admin Portal</span>
+        </div>
+        <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">&times;</button>
+      </div>
+
+      <nav class="sidebar-menu">
+        <div class="menu-section-label">MAIN</div>
+        <a href="index.html" class="menu-item" id="navDashboard">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+          </svg>
+          <span class="menu-text">Dashboard</span>
+        </a>
+
+        <div class="menu-section-label">STUDENTS</div>
+        <div class="menu-group open" id="groupStudents">
+          <div class="menu-item active" id="navStudentsHeader">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            <span class="menu-text">Students</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="students.html" class="submenu-item" id="navAllStudents">All Students</a>
+            <a href="add-student.html" class="submenu-item active" id="navAddStudent">Add Student</a>
+            <a href="bulk-upload.html" class="submenu-item" id="navBulkUpload">Bulk Upload</a>
+          </div>
+        </div>
+
+        <div class="menu-section-label">EMPLOYMENT</div>
+        <div class="menu-group" id="groupEmployment">
+          <div class="menu-item">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+              <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+            </svg>
+            <span class="menu-text">Employment</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="employment.html" class="submenu-item">Employment Tracking</a>
+            <a href="followups.html" class="submenu-item">Follow-ups</a>
+          </div>
+        </div>
+
+        <div class="menu-section-label">REPORTS</div>
+        <div class="menu-group" id="groupReports">
+          <div class="menu-item">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            <span class="menu-text">Reports</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="reports.html" class="submenu-item">Year-wise Report</a>
+            <a href="reports.html" class="submenu-item">ITI-wise Report</a>
+            <a href="reports.html" class="submenu-item">Trade-wise Report</a>
+            <a href="reports.html" class="submenu-item">Employment Report</a>
+          </div>
+        </div>
+
+        <div class="menu-section-label">DOWNLOADS</div>
+        <a href="downloads.html" class="menu-item">
+          <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span class="menu-text">Download Center</span>
+        </a>
+
+        <div class="menu-section-label">ADMINISTRATION</div>
+        <div class="menu-group" id="groupAdmin">
+          <div class="menu-item">
+            <svg class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+            <span class="menu-text">Administration</span>
+            <svg class="menu-caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+          </div>
+          <div class="submenu">
+            <a href="admin.html?tab=iti" class="submenu-item">ITI Management</a>
+            <a href="admin.html?tab=year" class="submenu-item">Academic Year</a>
+            <a href="admin.html?tab=trade" class="submenu-item">Trade Management</a>
+            <a href="admin.html?tab=user" class="submenu-item">User Management</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Sidebar Footer (Profile & Logout) -->
+      <div class="sidebar-footer">
+        <a href="profile.html" class="sidebar-footer-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          <span>Profile</span>
+        </a>
+        <a href="#" class="sidebar-footer-link">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN WRAPPER -->
+    <div class="main-wrapper">
+      <!-- TOPBAR -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="mobile-toggle-btn" id="sidebarToggleBtn" aria-label="Toggle menu">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="breadcrumbs">
+            <span class="breadcrumb-item">Tracker Home</span>
+            <span class="breadcrumb-separator">&rsaquo;</span>
+            <span class="breadcrumb-item active">Add Student</span>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <button class="icon-button notification-btn" title="Notifications">
+            <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+            <span class="notification-indicator"></span>
+          </button>
+
+          <div class="user-profile">
+            <div class="user-avatar">AD</div>
+            <div class="user-info">
+              <span class="user-name">Admin User</span>
+              <span class="user-role">District Admin</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- MAIN CONTENT: ADD STUDENT FORM ONLY -->
+      <main class="content-area">
+        <!-- Page Header Row -->
+        <div class="student-registry-header">
+          <div>
+            <span class="section-tagline">STUDENT REGISTRATION FORM</span>
+            <h1 class="page-title">Add Student</h1>
+          </div>
+          <div>
+            <a href="students.html" class="btn-cancel-top" style="text-decoration: none;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
+              <span>Cancel</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Add Student Form Layout: Form Column + Guide Aside Column (Matching Screenshot) -->
+        <div class="add-student-layout">
+          <!-- Left Form Column -->
+          <form class="add-student-form-col" id="mainAddStudentForm">
+            
+            <!-- Section 1: Basic Information -->
+            <div class="form-section-card">
+              <div class="form-section-header">
+                <div class="form-section-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+                  </svg>
+                </div>
+                <h3 class="form-section-title">Basic Information</h3>
+              </div>
+
+              <!-- Row 1: Student ID, Student Name, Father Name -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Student ID *</label>
+                  <input type="text" id="addStuId" class="form-input" placeholder="Enter student id" required value="STU-2024-0982">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Student Name *</label>
+                  <input type="text" id="addStuName" class="form-input" placeholder="Enter student name" required>
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Father Name</label>
+                  <input type="text" id="addStuFather" class="form-input" placeholder="Enter father name">
+                </div>
+              </div>
+
+              <!-- Row 2: Mother Name, Date of Birth, Mobile Number -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Mother Name</label>
+                  <input type="text" id="addStuMother" class="form-input" placeholder="Enter mother name">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Date of Birth</label>
+                  <input type="date" id="addStuDob" class="form-input">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Mobile Number *</label>
+                  <input type="tel" id="addStuMobile" class="form-input" placeholder="Enter mobile number" required>
+                </div>
+              </div>
+
+              <!-- Row 3: Alternate Mobile, Email -->
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label class="form-label">Alternate Mobile</label>
+                  <input type="tel" id="addStuAltMobile" class="form-input" placeholder="Enter alternate mobile">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Email</label>
+                  <input type="email" id="addStuEmail" class="form-input" placeholder="Enter email">
+                </div>
+              </div>
+
+              <!-- Row 4: Address, Block -->
+              <div class="form-grid-2">
+                <div class="form-field">
+                  <label class="form-label">Address</label>
+                  <input type="text" id="addStuAddress" class="form-input" placeholder="Enter complete address">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Block</label>
+                  <input type="text" id="addStuBlock" class="form-input" placeholder="Enter block">
+                </div>
+              </div>
+
+              <!-- Row 5: District, State, PIN Code -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">District</label>
+                  <input type="text" id="addStuDistrict" class="form-input" placeholder="Enter district" value="Dantewada">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">State</label>
+                  <input type="text" id="addStuState" class="form-input" placeholder="Enter state" value="Chhattisgarh">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">PIN Code</label>
+                  <input type="text" id="addStuPin" class="form-input" placeholder="Enter pin code" value="494449">
+                </div>
+              </div>
+
+              <!-- Row 6: Gender -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Gender</label>
+                  <select id="addStuGender" class="form-select">
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Education Information -->
+            <div class="form-section-card">
+              <div class="form-section-header">
+                <div class="form-section-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+                  </svg>
+                </div>
+                <h3 class="form-section-title">Education Information</h3>
+              </div>
+
+              <!-- Row 1: Academic Year, ITI Name, Trade Name -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Academic Year *</label>
+                  <select id="addStuAcadYear" class="form-select" required>
+                    <option value="">Select Academic Year</option>
+                    <option value="2024-25">2024-25</option>
+                    <option value="2023-25" selected>2023-25</option>
+                    <option value="2022-24">2022-24</option>
+                    <option value="2021-23">2021-23</option>
+                    <option value="2023-24">2023-24</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label">ITI Name *</label>
+                  <select id="addStuItiName" class="form-select" required>
+                    <option value="">Select ITI Name</option>
+                    <option value="ITI Dantewada" selected>ITI Dantewada</option>
+                    <option value="ITI Gidam">ITI Gidam</option>
+                    <option value="ITI Katekalyan">ITI Katekalyan</option>
+                    <option value="ITI Kuakonda">ITI Kuakonda</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Trade Name *</label>
+                  <select id="addStuTradeName" class="form-select" required>
+                    <option value="">Select Trade Name</option>
+                    <option value="Electrician">Electrician</option>
+                    <option value="Fitter" selected>Fitter</option>
+                    <option value="COPA">COPA</option>
+                    <option value="Welder">Welder</option>
+                    <option value="Mechanic Diesel">Mechanic Diesel</option>
+                    <option value="Sewing Technology">Sewing Technology</option>
+                    <option value="Wireman">Wireman</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Row 2: Admission Date, Course Duration, Expected Completion Date -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Admission Date</label>
+                  <input type="date" id="addStuAdmissionDate" class="form-input">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Course Duration</label>
+                  <select id="addStuDuration" class="form-select">
+                    <option value="">Select Course Duration</option>
+                    <option value="2 Years" selected>2 Years</option>
+                    <option value="1 Year">1 Year</option>
+                    <option value="6 Months">6 Months</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Expected Completion Date</label>
+                  <input type="date" id="addStuCompletionDate" class="form-input">
+                </div>
+              </div>
+
+              <!-- Row 3: Current Training Status & Current Employment Status -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Current Training Status</label>
+                  <select id="addStuTrainStatus" class="form-select">
+                    <option value="Under Training" selected>Under Training</option>
+                    <option value="Passed">Passed</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Dropped Out">Dropped Out</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Current Employment Status</label>
+                  <select id="addStuEmpStatus" class="form-select">
+                    <option value="Not Applicable" selected>Not Applicable</option>
+                    <option value="Employed">Employed</option>
+                    <option value="Seeking Work">Seeking Work</option>
+                    <option value="Apprenticeship">Apprenticeship</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 3: Identification Information -->
+            <div class="form-section-card">
+              <div class="form-section-header">
+                <div class="form-section-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+                    <circle cx="8" cy="10" r="2"></circle>
+                    <line x1="14" y1="9" x2="18" y2="9"></line>
+                    <line x1="14" y1="13" x2="18" y2="13"></line>
+                  </svg>
+                </div>
+                <h3 class="form-section-title">Identification Information</h3>
+              </div>
+
+              <!-- Row 1: Registration Number, Aadhar Number, Government / Reference Number -->
+              <div class="form-grid-3">
+                <div class="form-field">
+                  <label class="form-label">Registration Number</label>
+                  <input type="text" id="addStuRegNo" class="form-input" placeholder="Optional reference">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Aadhar Number</label>
+                  <input type="text" id="addStuAadhar" class="form-input" placeholder="Optional reference">
+                </div>
+                <div class="form-field">
+                  <label class="form-label">Government / Reference Number</label>
+                  <input type="text" id="addStuGovRef" class="form-input" placeholder="Optional reference">
+                </div>
+              </div>
+            </div>
+
+            <!-- Action Buttons Row -->
+            <div class="form-actions-row">
+              <button type="submit" class="btn-primary-add" style="padding: 9px 22px;">
+                Save Student
+              </button>
+              <a href="students.html" class="btn-cancel-top" style="text-decoration: none; padding: 8px 18px;">
+                Cancel
+              </a>
+            </div>
+          </form>
+
+          <!-- Right Aside Guide Column: "Data quality matters" -->
+          <aside class="add-student-aside-col">
+            <div class="info-guide-card">
+              <div class="guide-icon-header">
+                <div class="guide-icon">
+                  <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                  </svg>
+                </div>
+                <div>
+                  <h4 class="guide-title">Data quality matters</h4>
+                </div>
+              </div>
+              <p class="guide-text">Keep student identifiers and contact details accurate to support timely follow-ups.</p>
+
+              <div class="guide-checklist-box">
+                <div class="checklist-title">SECTIONS CHECKLIST</div>
+                <ul class="checklist-items">
+                  <li class="checklist-item">
+                    <span class="checklist-dot"></span>
+                    <span>Basic information</span>
+                  </li>
+                  <li class="checklist-item">
+                    <span class="checklist-dot"></span>
+                    <span>Education details</span>
+                  </li>
+                  <li class="checklist-item">
+                    <span class="checklist-dot"></span>
+                    <span>Identification references</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="app-footer">
+          <p>&copy; 2025 Directorate of Employment - Government of Chhattisgarh</p>
+        </footer>
+      </main>
+    </div>
+  </div>
+
+  <script src="add-student.js"></script>
+</body>
+</html>
