@@ -135,4 +135,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }, 600);
   }
+
+  // Sync Directly from Google Sheet
+  const btnSyncFromSheet = document.getElementById('btnSyncFromSheet');
+  if (btnSyncFromSheet) {
+    btnSyncFromSheet.addEventListener('click', async () => {
+      if (uploadStatusBadge) {
+        uploadStatusBadge.textContent = 'Connecting to Google Sheet...';
+        uploadStatusBadge.style.backgroundColor = '#e0f2fe';
+        uploadStatusBadge.style.color = '#0284c7';
+      }
+
+      try {
+        const students = await GoogleSheetsService.fetchStudents();
+        if (students && students.length > 0) {
+          if (uploadStatusBadge) {
+            uploadStatusBadge.textContent = `Google Sheet (${students.length} Records)`;
+            uploadStatusBadge.style.backgroundColor = '#dcfce7';
+            uploadStatusBadge.style.color = '#15803d';
+          }
+          if (statTotalRecords) statTotalRecords.textContent = students.length.toString();
+          if (statValidRecords) statValidRecords.textContent = students.length.toString();
+          if (statDuplicateRecords) statDuplicateRecords.textContent = '0';
+          if (statInvalidRecords) statInvalidRecords.textContent = '0';
+          if (window.showToast) window.showToast(`Fetched ${students.length} student records from Google Sheet!`, 'success');
+        } else {
+          if (uploadStatusBadge) {
+            uploadStatusBadge.textContent = 'Google Sheet Connected (0 Records)';
+            uploadStatusBadge.style.backgroundColor = '#fef3c7';
+            uploadStatusBadge.style.color = '#b45309';
+          }
+          if (statTotalRecords) statTotalRecords.textContent = '0';
+          if (statValidRecords) statValidRecords.textContent = '0';
+          if (statDuplicateRecords) statDuplicateRecords.textContent = '0';
+          if (statInvalidRecords) statInvalidRecords.textContent = '0';
+          if (window.showToast) window.showToast('Google Sheet connected! "Student Registration" tab currently has 0 rows. Add rows in your sheet and click Sync again.', 'info');
+        }
+      } catch (e) {
+        if (uploadStatusBadge) {
+          uploadStatusBadge.textContent = 'Sync Failed';
+          uploadStatusBadge.style.backgroundColor = '#fee2e2';
+          uploadStatusBadge.style.color = '#dc2626';
+        }
+        if (window.showToast) window.showToast('Could not fetch from Google Sheet: ' + e.message, 'error');
+      }
+    });
+  }
 });

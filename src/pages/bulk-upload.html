@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -188,7 +188,23 @@
             <span class="section-tagline">STUDENTS / IMPORT CENTER</span>
             <h1 class="page-title">Bulk Upload</h1>
           </div>
-          <div>
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <a href="https://docs.google.com/spreadsheets/d/1Tj4XdmVqOdAcX0KaDi6wK5KXrWRqfFBiBAx345JHPf0/edit?usp=sharing" target="_blank" class="btn-cancel-top" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+              <span>Open Google Sheet</span>
+            </a>
+            <button class="btn-export" id="btnSyncFromSheet" style="background-color: #ecfdf5; color: #065f46; border-color: #a7f3d0;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span>Sync from Sheet</span>
+            </button>
             <button class="btn-export" id="btnDownloadTemplate">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
@@ -295,6 +311,7 @@
 
     <script src="../js/config.js"></script>
   <script src="../js/common.js"></script>
+  <script src="../js/google-sheets.js"></script>
   <script src="../js/bulk-upload.js"></script>
 </body>
 </html>

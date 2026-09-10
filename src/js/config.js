@@ -8,9 +8,21 @@ const APP_CONFIG = {
   DISTRICT: 'Dantewada',
   STATE: 'Chhattisgarh',
   CURRENT_ACADEMIC_YEAR: '2024-25',
-  
-  // Base endpoint for Google Sheets / Backend Web App API integration
-  API_BASE_URL: '',
+
+  // Google Sheets Integration (Connected to Live Sheet)
+  GOOGLE_SHEET: {
+    ID: '1Tj4XdmVqOdAcX0KaDi6wK5KXrWRqfFBiBAx345JHPf0',
+    URL: 'https://docs.google.com/spreadsheets/d/1Tj4XdmVqOdAcX0KaDi6wK5KXrWRqfFBiBAx345JHPf0/edit?usp=sharing',
+    TABS: {
+      ITI_MANAGEMENT: { name: 'ITI Management', gid: '0' },
+      TRADE_MANAGEMENT: { name: 'Trade Management', gid: '1179972132' },
+      STUDENT_REGISTRATION: { name: 'Student Registration', gid: '96239547' },
+      STUDENT_STATUS_TRACKING: { name: 'Student Status Tracking', gid: '645142661' },
+      EMPLOYMENT_TRACKING: { name: 'Employment Tracking Module', gid: '473534489' }
+    },
+    // Optional Google Apps Script Web App Deployment URL for direct POST write access
+    APPS_SCRIPT_WEB_APP_URL: ''
+  },
   
   // Available Government ITIs in District
   ITIS: [
