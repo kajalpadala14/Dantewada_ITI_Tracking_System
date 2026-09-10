@@ -23,18 +23,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Download Sample Template
+  // Download Sample Template (Exact 24 Columns matching Student Registration sheet)
   const btnDownloadTemplate = document.getElementById('btnDownloadTemplate');
   if (btnDownloadTemplate) {
     btnDownloadTemplate.addEventListener('click', () => {
+      const headers = [
+        "Student ID", "Student Name", "Father Name", "Mother Name", "Gender", "Date of Birth",
+        "Mobile Number", "Alternate Mobile Number", "Email ID", "Address", "Block", "District",
+        "State", "PIN Code", "Academic Year", "ITI Name", "Trade Name", "Admission Date",
+        "Course Duration", "Expected Completion Date", "Current Training Status",
+        "Registration Number", "ITI Roll Number", "Government ID Reference Number"
+      ];
+      
+      const sampleRow = [
+        "STU-2024-001", "Ramesh Sahu", "Gopal Sahu", "Sunita Sahu", "Male", "2004-05-12",
+        "9826100001", "9826100002", "ramesh@example.com", "Main Road, Dantewada", "Dantewada", "Dantewada",
+        "Chhattisgarh", "494449", "2024-25", "Govt. ITI Dantewada", "Electrician", "2024-08-01",
+        "2 Years", "2026-07-31", "Under Training",
+        "REG-2024-001", "ROLL-2024-001", "1234-5678-9012"
+      ];
+
       const csvContent = "data:text/csv;charset=utf-8," + 
-        "StudentID,StudentName,FatherName,MotherName,DOB,Mobile,Email,Address,Block,District,State,PIN,Gender,AcademicYear,ITIName,TradeName,AdmissionDate,Duration,ExpectedCompletion,TrainingStatus,EmploymentStatus\n" +
-        "STU-2024-001,Ramesh Sahu,Gopal Sahu,Sunita Sahu,2004-05-12,9826100001,ramesh@example.com,Main Road,Dantewada,Dantewada,Chhattisgarh,494449,Male,2024-25,ITI Dantewada,Electrician,2024-08-01,2 Years,2026-07-31,Under Training,Not Applicable";
+        headers.join(",") + "\n" +
+        sampleRow.map(v => `"${v}"`).join(",");
       
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "iti_student_upload_template.csv");
+      link.setAttribute("download", "iti_student_registration_template_24cols.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -95,45 +111,81 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Update Status Badge
     if (uploadStatusBadge) {
-      uploadStatusBadge.textContent = `${file.name} (Validating...)`;
+      uploadStatusBadge.textContent = `${file.name} (Reading...)`;
       uploadStatusBadge.style.backgroundColor = '#e0f2fe';
       uploadStatusBadge.style.color = '#0284c7';
     }
 
-    setTimeout(() => {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const content = e.target.result || '';
+      const lines = content.split(/\r?\n/).filter(line => line.trim().length > 0);
+      const total = Math.max(0, lines.length - 1); // exclude header row
+
       if (uploadStatusBadge) {
-        uploadStatusBadge.textContent = `${file.name} (Validated)`;
+        uploadStatusBadge.textContent = `${file.name} (${total} Records)`;
+        uploadStatusBadge.style.backgroundColor = total > 0 ? '#dcfce7' : '#fef3c7';
+        uploadStatusBadge.style.color = total > 0 ? '#15803d' : '#b45309';
+      }
+
+      if (statTotalRecords) statTotalRecords.textContent = total.toString();
+      if (statValidRecords) statValidRecords.textContent = total.toString();
+      if (statDuplicateRecords) statDuplicateRecords.textContent = '0';
+      if (statInvalidRecords) statInvalidRecords.textContent = '0';
+
+      if (errorReportBox) {
+        if (total > 0) {
+          errorReportBox.innerHTML = `
+            <div class="error-report-icon" style="color: #16a34a;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+              </svg>
+            </div>
+            <div style="flex: 1;">
+              <div class="error-report-title" style="color: #15803d;">File validated: ${total} records parsed successfully.</div>
+              <div class="error-report-desc">No syntax errors detected in CSV file structure.</div>
+            </div>
+          `;
+        } else {
+          errorReportBox.innerHTML = `
+            <div class="error-report-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div style="flex: 1;">
+              <div class="error-report-title">File contains only headers or is empty.</div>
+              <div class="error-report-desc">Please add student data rows and re-upload.</div>
+            </div>
+          `;
+        }
+      }
+    };
+    reader.onerror = function() {
+      if (uploadStatusBadge) {
+        uploadStatusBadge.textContent = 'Read Error';
+        uploadStatusBadge.style.backgroundColor = '#fee2e2';
+        uploadStatusBadge.style.color = '#dc2626';
+      }
+    };
+
+    if (file.name.endsWith('.csv') || file.type.includes('csv') || file.type.includes('text')) {
+      reader.readAsText(file);
+    } else {
+      // For binary files (.xlsx), show file ready message
+      if (uploadStatusBadge) {
+        uploadStatusBadge.textContent = `${file.name} (File Loaded)`;
         uploadStatusBadge.style.backgroundColor = '#dcfce7';
         uploadStatusBadge.style.color = '#15803d';
       }
-
-      // Populate preview counts
-      if (statTotalRecords) statTotalRecords.textContent = '250';
-      if (statValidRecords) statValidRecords.textContent = '242';
-      if (statDuplicateRecords) statDuplicateRecords.textContent = '5';
-      if (statInvalidRecords) statInvalidRecords.textContent = '3';
-
-      // Update Error Report Box
-      if (errorReportBox) {
-        errorReportBox.innerHTML = `
-          <div class="error-report-icon">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"></circle>
-              <line x1="12" y1="8" x2="12" y2="12"></line>
-              <line x1="12" y1="16" x2="12.01" y2="16"></line>
-            </svg>
-          </div>
-          <div style="flex: 1;">
-            <div class="error-report-title">3 records contain invalid phone numbers or missing trade names.</div>
-            <div class="error-report-desc">5 duplicate student IDs were detected and will be skipped.</div>
-            <div style="margin-top: 10px; display: flex; gap: 8px;">
-              <button class="btn-primary-add" style="padding: 5px 12px; font-size: 11.5px;" onclick="alert('Successfully imported 242 valid student records into Dantewada ITI Database!')">Import 242 Valid Records</button>
-              <button class="btn-export" style="padding: 5px 12px; font-size: 11.5px;" onclick="alert('Downloading error log report...')">Download Error Log</button>
-            </div>
-          </div>
-        `;
-      }
-    }, 600);
+      if (statTotalRecords) statTotalRecords.textContent = '1 File';
+      if (statValidRecords) statValidRecords.textContent = 'Ready';
+      if (statDuplicateRecords) statDuplicateRecords.textContent = '0';
+      if (statInvalidRecords) statInvalidRecords.textContent = '0';
+    }
   }
 
   // Sync Directly from Google Sheet

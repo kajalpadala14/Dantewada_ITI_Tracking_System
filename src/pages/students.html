@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -188,7 +188,15 @@
             <span class="section-tagline">STUDENT REGISTRY</span>
             <h1 class="page-title">All Students</h1>
           </div>
-          <div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <button id="btnSyncSheet" title="Sync local and queued students with Google Sheet" style="display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;">
+              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+              </svg>
+              <span id="syncSheetBtnText">Sync Sheet</span>
+            </button>
             <a href="add-student.html" class="btn-primary-add" style="text-decoration: none;">
               <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
@@ -235,7 +243,7 @@
 
         <!-- Meta Info & Column Configuration -->
         <div class="registry-meta-bar">
-          <span id="registryMetaText"><strong>2,846</strong> records found | Updated today 10:12 AM</span>
+          <span id="registryMetaText"><strong>0</strong> records found</span>
           <button class="btn-columns" title="Configure table columns">
             <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"></path>
@@ -268,7 +276,7 @@
 
           <!-- Table Pagination -->
           <div class="table-footer">
-            <span id="registryPageInfo">Showing 1-7 of 2,846 students</span>
+            <span id="registryPageInfo">Showing 0 of 0 students</span>
             <div class="table-pagination">
               <button class="page-nav-btn" disabled>&lsaquo;</button>
               <button class="page-num-btn active">1</button>
@@ -301,7 +309,8 @@
     </div>
   </div>
 
-    <script src="../js/config.js"></script>
+  <script src="../js/env.js"></script>
+  <script src="../js/config.js"></script>
   <script src="../js/common.js"></script>
   <script src="../js/google-sheets.js"></script>
   <script src="../js/students.js"></script>

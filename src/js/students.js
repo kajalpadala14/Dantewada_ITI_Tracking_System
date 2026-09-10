@@ -23,86 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // --- Student Registry Dataset (Exact matches from media_1789016161661.png) ---
-  let studentsData = [
-    {
-      id: "STU-2023-0142",
-      name: "Rohit Kumar",
-      iti: "ITI Dantewada",
-      trade: "Fitter",
-      year: "2023-25",
-      trainingStatus: "Under Training",
-      employmentStatus: "Not Applicable",
-      mobile: "+91 98261 44102",
-      updated: "Today, 10:12 AM"
-    },
-    {
-      id: "STU-2022-0891",
-      name: "Anita Markam",
-      iti: "ITI Gidam",
-      trade: "Electrician",
-      year: "2022-24",
-      trainingStatus: "Passed",
-      employmentStatus: "Employed",
-      mobile: "+91 94242 81903",
-      updated: "Today, 09:45 AM"
-    },
-    {
-      id: "STU-2021-0412",
-      name: "Manoj Singh",
-      iti: "ITI Katekalyan",
-      trade: "Welder",
-      year: "2021-23",
-      trainingStatus: "Completed",
-      employmentStatus: "Seeking Work",
-      mobile: "+91 79745 12098",
-      updated: "Yesterday"
-    },
-    {
-      id: "STU-2023-1105",
-      name: "Sangeeta Mandavi",
-      iti: "ITI Kuakonda",
-      trade: "COPA",
-      year: "2023-24",
-      trainingStatus: "Under Training",
-      employmentStatus: "Not Applicable",
-      mobile: "+91 91310 98234",
-      updated: "08 Sep 2026"
-    },
-    {
-      id: "STU-2022-0764",
-      name: "Vikas Yadav",
-      iti: "ITI Dantewada",
-      trade: "Mechanic Diesel",
-      year: "2022-24",
-      trainingStatus: "Passed",
-      employmentStatus: "Employed",
-      mobile: "+91 94060 33812",
-      updated: "06 Sep 2026"
-    },
-    {
-      id: "STU-2023-0912",
-      name: "Kavita Diwan",
-      iti: "ITI Gidam",
-      trade: "Sewing Technology",
-      year: "2023-25",
-      trainingStatus: "Under Training",
-      employmentStatus: "Not Applicable",
-      mobile: "+91 88391 77210",
-      updated: "05 Sep 2026"
-    },
-    {
-      id: "STU-2022-0633",
-      name: "Deepak Netam",
-      iti: "ITI Katekalyan",
-      trade: "Electrician",
-      year: "2022-24",
-      trainingStatus: "Passed",
-      employmentStatus: "Seeking Work",
-      mobile: "+91 97531 65421",
-      updated: "04 Sep 2026"
-    }
-  ];
+  // --- Base Student Registry Dataset (Dynamic - No hardcoded/dummy records) ---
+  let defaultStudents = [];
+
+  // Merge Local Storage Records
+  let localRegistry = [];
+  try {
+    localRegistry = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+  } catch (e) {
+    localRegistry = [];
+  }
+
+  const combinedMap = new Map();
+  localRegistry.forEach(s => {
+    if (s && s.id) combinedMap.set(s.id, s);
+  });
+  let studentsData = Array.from(combinedMap.values());
 
   // Helper: Status Class mapping
   function getTrainingBadgeClass(status) {
@@ -121,6 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function getInitials(name) {
+    if (!name) return 'ST';
     return name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
   }
 
@@ -129,13 +66,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const itiFilter = document.getElementById('registryItiFilter');
   const yearFilter = document.getElementById('registryYearFilter');
   const pageInfo = document.getElementById('registryPageInfo');
+  const metaText = document.getElementById('registryMetaText');
 
   function renderTable(data) {
     if (!tableBody) return;
     tableBody.innerHTML = '';
 
+    if (metaText) {
+      metaText.innerHTML = `<strong>${data.length}</strong> records found`;
+    }
+
     if (data.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 32px; color: #94a3b8;">No matching student records found.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #94a3b8;">No student records found in Google Sheet. Click "Add Student" or sync from your spreadsheet.</td></tr>`;
       if (pageInfo) pageInfo.textContent = 'Showing 0 of 0 students';
       return;
     }
@@ -159,8 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </span>
         </td>
         <td>
-          <span class="status-badge ${getEmploymentBadgeClass(student.employmentStatus)}">
-            ${student.employmentStatus}
+          <span class="status-badge ${getEmploymentBadgeClass(student.employmentStatus || 'Not Applicable')}">
+            ${student.employmentStatus || 'Not Applicable'}
           </span>
         </td>
         <td class="text-right">
@@ -189,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (pageInfo) {
-      pageInfo.textContent = `Showing 1-${data.length} of 2,846 students`;
+      pageInfo.textContent = `Showing 1-${data.length} of ${data.length} students`;
     }
 
     // Modal view listener
@@ -208,11 +150,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.querySelectorAll('.btn-delete').forEach(btn => {
-      btn.addEventListener('click', (e) => {
+      btn.addEventListener('click', async (e) => {
         const id = e.currentTarget.getAttribute('data-id');
-        if (confirm(`Are you sure you want to delete student record ${id}?`)) {
+        if (confirm(`Are you sure you want to delete student record "${id}" from Google Sheet and Registry?`)) {
+          // 1. Remove from local memory and UI
           studentsData = studentsData.filter(s => s.id !== id);
+          combinedMap.delete(id);
+          try {
+            const localStudents = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+            const updated = localStudents.filter(s => s.id !== id);
+            localStorage.setItem('iti_students_registry', JSON.stringify(updated));
+          } catch(err){}
           filterTable();
+
+          // 2. Dispatch delete to Google Sheet
+          if (window.GoogleSheetsService && typeof GoogleSheetsService.deleteStudent === 'function') {
+            await GoogleSheetsService.deleteStudent(id);
+          }
+          alert(`✓ Student record "${id}" deleted successfully from Google Sheet and Registry!`);
         }
       });
     });
@@ -224,10 +179,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const year = yearFilter ? yearFilter.value : 'All';
 
     const filtered = studentsData.filter(s => {
-      const matchQuery = s.name.toLowerCase().includes(query) ||
-                         s.id.toLowerCase().includes(query) ||
-                         s.trade.toLowerCase().includes(query) ||
-                         s.iti.toLowerCase().includes(query);
+      const matchQuery = (s.name || '').toLowerCase().includes(query) ||
+                         (s.id || '').toLowerCase().includes(query) ||
+                         (s.trade || '').toLowerCase().includes(query) ||
+                         (s.iti || '').toLowerCase().includes(query);
       const matchIti = (iti === 'All') || (s.iti === iti);
       const matchYear = (year === 'All') || (s.year === year);
       return matchQuery && matchIti && matchYear;
@@ -242,6 +197,65 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderTable(studentsData);
 
+  // Asynchronously fetch live students from Google Sheet (Student Registration tab)
+  async function refreshFromGoogleSheet() {
+    if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchStudents === 'function') {
+      try {
+        const liveRows = await GoogleSheetsService.fetchStudents();
+        if (liveRows && liveRows.length > 0) {
+          liveRows.forEach(row => {
+            if (row.id) {
+              combinedMap.set(row.id, row);
+            }
+          });
+          studentsData = Array.from(combinedMap.values());
+          filterTable();
+        }
+        return liveRows;
+      } catch (err) {
+        console.log('Live Google Sheet fetch info:', err.message);
+        return [];
+      }
+    }
+    return [];
+  }
+
+  // Initial load from Google Sheet + auto-sync offline/local students
+  refreshFromGoogleSheet().then(async () => {
+    if (window.GoogleSheetsService && typeof GoogleSheetsService.syncAllLocalToSheet === 'function') {
+      const res = await GoogleSheetsService.syncAllLocalToSheet();
+      if (res && res.synced > 0) {
+        console.log(`[Sync] Automatically synced ${res.synced} students to Google Sheet.`);
+        await refreshFromGoogleSheet();
+      }
+    }
+  });
+
+  // Manual Sync Button Handler
+  const btnSyncSheet = document.getElementById('btnSyncSheet');
+  const syncSheetBtnText = document.getElementById('syncSheetBtnText');
+  if (btnSyncSheet) {
+    btnSyncSheet.addEventListener('click', async () => {
+      btnSyncSheet.disabled = true;
+      if (syncSheetBtnText) syncSheetBtnText.textContent = 'Syncing...';
+      try {
+        if (window.GoogleSheetsService && typeof GoogleSheetsService.syncAllLocalToSheet === 'function') {
+          const syncRes = await GoogleSheetsService.syncAllLocalToSheet();
+          const rows = await refreshFromGoogleSheet();
+          alert(`✓ Google Sheet Sync Successful!\n\n${syncRes.synced} record(s) uploaded to Google Sheet.\nTotal active records in Google Sheet: ${rows.length}`);
+        } else {
+          await refreshFromGoogleSheet();
+          alert('✓ Google Sheet data refreshed!');
+        }
+      } catch (err) {
+        alert('Sync error: ' + (err.message || err));
+      } finally {
+        btnSyncSheet.disabled = false;
+        if (syncSheetBtnText) syncSheetBtnText.textContent = 'Sync Sheet';
+      }
+    });
+  }
+
   // Detail Modal
   const modal = document.getElementById('detailModal');
   const modalBody = document.getElementById('modalBody');
@@ -253,41 +267,54 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!s || !modalBody) return;
 
     modalBody.innerHTML = `
-      <div class="modal-detail-row">
-        <span class="detail-label">Student ID:</span>
-        <span class="detail-value">${s.id}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Full Name:</span>
-        <span class="detail-value">${s.name}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">ITI Institution:</span>
-        <span class="detail-value">${s.iti}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Trade:</span>
-        <span class="detail-value">${s.trade}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Academic Session:</span>
-        <span class="detail-value">${s.year}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Training Status:</span>
-        <span class="status-badge ${getTrainingBadgeClass(s.trainingStatus)}">${s.trainingStatus}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Employment Status:</span>
-        <span class="status-badge ${getEmploymentBadgeClass(s.employmentStatus)}">${s.employmentStatus}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Contact Mobile:</span>
-        <span class="detail-value">${s.mobile}</span>
-      </div>
-      <div class="modal-detail-row">
-        <span class="detail-label">Last Updated:</span>
-        <span class="detail-value">${s.updated}</span>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Section 1: Basic Information -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+          <h4 style="margin: 0 0 12px 0; font-size: 13px; color: #1e3a8a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            1. Personal & Contact Details
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+            <div><span style="color:#64748b; font-size:12px;">Full Name:</span> <strong style="font-size:13px; color:#0f172a;">${s.name || '—'}</strong></div>
+            <div><span style="color:#64748b; font-size:12px;">Father Name:</span> <span style="font-size:13px; color:#0f172a;">${s.fatherName || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Mother Name:</span> <span style="font-size:13px; color:#0f172a;">${s.motherName || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Gender:</span> <span style="font-size:13px; color:#0f172a;">${s.gender || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Date of Birth:</span> <span style="font-size:13px; color:#0f172a;">${s.dob || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Mobile Number:</span> <span style="font-size:13px; color:#0f172a;">${s.mobile || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Alternate Mobile:</span> <span style="font-size:13px; color:#0f172a;">${s.altMobile || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Email ID:</span> <span style="font-size:13px; color:#0f172a;">${s.email || '—'}</span></div>
+            <div style="grid-column: 1 / -1;"><span style="color:#64748b; font-size:12px;">Address:</span> <span style="font-size:13px; color:#0f172a;">${s.address || '—'}, Block: ${s.block || '—'}, District: ${s.district || 'Dantewada'}, State: ${s.state || 'Chhattisgarh'}, PIN: ${s.pin || '494449'}</span></div>
+          </div>
+        </div>
+
+        <!-- Section 2: Education & Training Information -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+          <h4 style="margin: 0 0 12px 0; font-size: 13px; color: #1e3a8a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            2. ITI & Academic Details
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+            <div><span style="color:#64748b; font-size:12px;">ITI Institution:</span> <strong style="font-size:13px; color:#0f172a;">${s.iti || '—'}</strong></div>
+            <div><span style="color:#64748b; font-size:12px;">Trade:</span> <strong style="font-size:13px; color:#0f172a;">${s.trade || '—'}</strong></div>
+            <div><span style="color:#64748b; font-size:12px;">Academic Session:</span> <span style="font-size:13px; color:#0f172a;">${s.year || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Admission Date:</span> <span style="font-size:13px; color:#0f172a;">${s.admissionDate || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Course Duration:</span> <span style="font-size:13px; color:#0f172a;">${s.duration || '2 Years'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Expected Completion:</span> <span style="font-size:13px; color:#0f172a;">${s.expectedDate || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Training Status:</span> <span class="status-badge ${getTrainingBadgeClass(s.trainingStatus)}">${s.trainingStatus || 'Under Training'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Employment Status:</span> <span class="status-badge ${getEmploymentBadgeClass(s.employmentStatus || 'Not Applicable')}">${s.employmentStatus || 'Not Applicable'}</span></div>
+          </div>
+        </div>
+
+        <!-- Section 3: Official Identification References -->
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px 16px;">
+          <h4 style="margin: 0 0 12px 0; font-size: 13px; color: #1e3a8a; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            3. Identification Numbers
+          </h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
+            <div><span style="color:#64748b; font-size:12px;">Student ID:</span> <span style="font-family:monospace; font-weight:600; color:#1e40af;">${s.id}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Registration Number:</span> <span style="font-family:monospace; color:#334155;">${s.regNumber || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">ITI Roll Number:</span> <span style="font-family:monospace; color:#334155;">${s.rollNumber || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Government ID Reference:</span> <span style="font-family:monospace; color:#334155;">${s.govId || '—'}</span></div>
+          </div>
+        </div>
       </div>
     `;
 

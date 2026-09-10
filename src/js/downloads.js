@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dantewada ITI Student Tracking System - Download Center
  * Matching Screenshot media_1789017970554.png
  */
@@ -34,86 +34,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Sample Preview Data (Matching screenshot media_1789017970554.png)
-  const downloadData = [
-    {
-      id: 'DW-2024-001',
-      name: 'Rohit Kumar',
-      iti: 'Govt. ITI Dantewada',
-      trade: 'Fitter',
-      year: '2024-25',
-      trainingStatus: 'Under Training',
-      trainingBadgeClass: 'under-training',
-      employmentStatus: 'Not Applicable',
-      employmentBadgeClass: 'not-applicable'
-    },
-    {
-      id: 'GD-2023-254',
-      name: 'Anita Markam',
-      iti: 'Govt. ITI Geedam',
-      trade: 'Electrician',
-      year: '2023-24',
-      trainingStatus: 'Passed',
-      trainingBadgeClass: 'passed',
-      employmentStatus: 'Employed',
-      employmentBadgeClass: 'employed'
-    },
-    {
-      id: 'KT-2022-032',
-      name: 'Manoj Singh',
-      iti: 'Govt. ITI Katekalyan',
-      trade: 'Welder',
-      year: '2022-23',
-      trainingStatus: 'Completed',
-      trainingBadgeClass: 'completed',
-      employmentStatus: 'Seeking Work',
-      employmentBadgeClass: 'seeking-work'
-    },
-    {
-      id: 'KQ-2024-088',
-      name: 'Sangeeta Mandavi',
-      iti: 'Govt. ITI Kuakonda',
-      trade: 'COPA',
-      year: '2024-25',
-      trainingStatus: 'Under Training',
-      trainingBadgeClass: 'under-training',
-      employmentStatus: 'Not Applicable',
-      employmentBadgeClass: 'not-applicable'
-    },
-    {
-      id: 'DW-2024-045',
-      name: 'Pooja Kashyap',
-      iti: 'Govt. ITI Dantewada',
-      trade: 'COPA',
-      year: '2024-25',
-      trainingStatus: 'Passed',
-      trainingBadgeClass: 'passed',
-      employmentStatus: 'Employed',
-      employmentBadgeClass: 'employed'
-    },
-    {
-      id: 'GD-2023-102',
-      name: 'Ramesh Netam',
-      iti: 'Govt. ITI Geedam',
-      trade: 'Mechanic Diesel',
-      year: '2023-24',
-      trainingStatus: 'Completed',
-      trainingBadgeClass: 'completed',
-      employmentStatus: 'Seeking Work',
-      employmentBadgeClass: 'seeking-work'
-    },
-    {
-      id: 'KT-2024-019',
-      name: 'Sunil Poyam',
-      iti: 'Govt. ITI Katekalyan',
-      trade: 'Fitter',
-      year: '2024-25',
-      trainingStatus: 'Under Training',
-      trainingBadgeClass: 'under-training',
-      employmentStatus: 'Not Applicable',
-      employmentBadgeClass: 'not-applicable'
+  // Dynamic Download Records (No hardcoded/dummy records)
+  let downloadData = [];
+  try {
+    const local = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+    if (Array.isArray(local)) {
+      downloadData = local.map(s => ({
+        ...s,
+        trainingBadgeClass: (s.trainingStatus === 'Passed') ? 'passed' : ((s.trainingStatus === 'Completed') ? 'completed' : 'under-training'),
+        employmentBadgeClass: (s.employmentStatus === 'Employed') ? 'employed' : ((s.employmentStatus === 'Seeking Work') ? 'seeking-work' : 'not-applicable')
+      }));
     }
-  ];
+  } catch (e) {
+    downloadData = [];
+  }
 
   const tableBody = document.getElementById('downloadsTableBody');
   const previewSubtext = document.getElementById('previewSubtext');
@@ -164,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (previewSubtext) {
-      previewSubtext.textContent = `Static sample preview • ${records.length} records`;
+      previewSubtext.textContent = `Live data preview • ${records.length} records`;
     }
   }
 
@@ -201,21 +135,46 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Export CSV Functionality
+  // Export CSV Functionality (Exact 24 Columns matching Student Registration sheet)
   function downloadCSV() {
     if (currentRecords.length === 0) {
       alert('No records available to export.');
       return;
     }
 
-    const headers = ['STUDENT ID', 'STUDENT NAME', 'ITI', 'TRADE', 'TRAINING STATUS', 'EMPLOYMENT STATUS'];
+    const headers = [
+      'Student ID', 'Student Name', 'Father Name', 'Mother Name', 'Gender', 'Date of Birth',
+      'Mobile Number', 'Alternate Mobile Number', 'Email ID', 'Address', 'Block', 'District',
+      'State', 'PIN Code', 'Academic Year', 'ITI Name', 'Trade Name', 'Admission Date',
+      'Course Duration', 'Expected Completion Date', 'Current Training Status',
+      'Registration Number', 'ITI Roll Number', 'Government ID Reference Number'
+    ];
+
     const rows = currentRecords.map(r => [
-      `"${r.id}"`,
-      `"${r.name}"`,
-      `"${r.iti}"`,
-      `"${r.trade}"`,
-      `"${r.trainingStatus}"`,
-      `"${r.employmentStatus}"`
+      `"${r.id || ''}"`,
+      `"${r.name || ''}"`,
+      `"${r.fatherName || ''}"`,
+      `"${r.motherName || ''}"`,
+      `"${r.gender || 'Male'}"`,
+      `"${r.dob || ''}"`,
+      `"${r.mobile || ''}"`,
+      `"${r.altMobile || ''}"`,
+      `"${r.email || ''}"`,
+      `"${r.address || ''}"`,
+      `"${r.block || ''}"`,
+      `"${r.district || 'Dantewada'}"`,
+      `"${r.state || 'Chhattisgarh'}"`,
+      `"${r.pin || '494449'}"`,
+      `"${r.year || '2024-25'}"`,
+      `"${r.iti || ''}"`,
+      `"${r.trade || ''}"`,
+      `"${r.admissionDate || ''}"`,
+      `"${r.duration || '2 Years'}"`,
+      `"${r.expectedDate || ''}"`,
+      `"${r.trainingStatus || 'Under Training'}"`,
+      `"${r.regNumber || ''}"`,
+      `"${r.rollNumber || ''}"`,
+      `"${r.govId || ''}"`
     ]);
 
     const csvContent = [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
@@ -223,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.setAttribute('href', url);
-    link.setAttribute('download', `Dantewada_ITI_Download_${new Date().toISOString().slice(0, 10)}.csv`);
+    link.setAttribute('download', `Dantewada_ITI_Student_Registration_${new Date().toISOString().slice(0, 10)}.csv`);
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -239,4 +198,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial render
   renderTable(currentRecords);
+
+  // Live fetch from Google Sheets
+  if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchStudents === 'function') {
+    GoogleSheetsService.fetchStudents().then(liveRows => {
+      if (liveRows && liveRows.length > 0) {
+        const studentMap = new Map();
+        downloadData.forEach(s => studentMap.set(s.id, s));
+        liveRows.forEach(s => {
+          studentMap.set(s.id, {
+            ...s,
+            trainingBadgeClass: (s.trainingStatus === 'Passed') ? 'passed' : ((s.trainingStatus === 'Completed') ? 'completed' : 'under-training'),
+            employmentBadgeClass: (s.employmentStatus === 'Employed') ? 'employed' : ((s.employmentStatus === 'Seeking Work') ? 'seeking-work' : 'not-applicable')
+          });
+        });
+        downloadData = Array.from(studentMap.values());
+        currentRecords = [...downloadData];
+        renderTable(currentRecords);
+      }
+    }).catch(err => console.log('Downloads live fetch info:', err.message));
+  }
 });

@@ -23,42 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dataset from Reference Screenshot
-  let followupsData = [
-    {
-      student: "Anita Markam",
-      iti: "ITI Geedam",
-      status: "Employed",
-      lastFollowup: "18 Jun 2025",
-      contactMode: "Phone",
-      remarks: "Working at Shree Motors",
-      nextFollowup: "18 Sep 2025",
-      phone: "+91 94242 81903",
-      counselor: "R. K. Verma (Placement Officer)"
-    },
-    {
-      student: "Manoj Singh",
-      iti: "ITI Katekalyan",
-      status: "Seeking Work",
-      lastFollowup: "12 Jun 2025",
-      contactMode: "WhatsApp",
-      remarks: "Shared two openings",
-      nextFollowup: "12 Jul 2025",
-      phone: "+91 79745 12098",
-      counselor: "P. Baghel (ITI Staff)"
-    },
-    {
-      student: "Deepak Netam",
-      iti: "ITI Katekalyan",
-      status: "Seeking Work",
-      lastFollowup: "05 Jun 2025",
-      contactMode: "ITI Update",
-      remarks: "Awaiting certificate",
-      nextFollowup: "05 Jul 2025",
-      phone: "+91 97531 65421",
-      counselor: "S. K. Mandavi"
-    }
-  ];
+  // Dynamic Follow-ups Dataset (No hardcoded/dummy records)
+  let followupsData = [];
+  try {
+    const local = JSON.parse(localStorage.getItem('iti_followups') || '[]');
+    if (Array.isArray(local)) followupsData = local;
+  } catch(e) {
+    followupsData = [];
+  }
 
   const tableBody = document.getElementById('followupsTableBody');
   const searchInput = document.getElementById('followupSearchInput');
@@ -71,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tableBody.innerHTML = '';
 
     if (data.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 32px; color: #94a3b8;">No matching follow-up records found.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 40px; color: #94a3b8;">No follow-up records found in Google Sheet.</td></tr>`;
       return;
     }
 
@@ -128,6 +100,30 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnApplyFilter) btnApplyFilter.addEventListener('click', filterData);
 
   renderTable(followupsData);
+
+  // Live fetch from Google Sheets
+  if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchEmployment === 'function') {
+    GoogleSheetsService.fetchEmployment().then(liveEmp => {
+      if (liveEmp && liveEmp.length > 0) {
+        liveEmp.forEach(le => {
+          if (le.lastFollowup || le.remark || le.company) {
+            followupsData.push({
+              student: le.role ? `${le.role} Candidate` : 'ITI Graduate',
+              iti: 'Govt. ITI Dantewada',
+              status: le.status || 'Employed',
+              lastFollowup: le.lastFollowup || '—',
+              contactMode: 'Phone Call',
+              remarks: le.remark || (le.company ? `Working at ${le.company}` : 'Follow-up logged'),
+              nextFollowup: '—',
+              phone: '—',
+              counselor: 'Placement Cell'
+            });
+          }
+        });
+        filterData();
+      }
+    }).catch(err => console.log('Followups live fetch info:', err.message));
+  }
 
   // Details Modal
   const modal = document.getElementById('followupModal');

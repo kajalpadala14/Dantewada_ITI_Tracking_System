@@ -23,42 +23,16 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Dataset from Reference Screenshot
-  let employmentRecords = [
-    {
-      student: "Anita Markam",
-      iti: "ITI Geedam",
-      status: "Employed",
-      type: "Private",
-      company: "Shree Motors",
-      role: "Technician",
-      location: "Raipur",
-      salary: "₹18,000–22,000",
-      contact: "+91 94242 81903"
-    },
-    {
-      student: "Vikas Yadav",
-      iti: "ITI Dantewada",
-      status: "Employed",
-      type: "Private",
-      company: "Bastar Auto Works",
-      role: "Diesel Mechanic",
-      location: "Jagdalpur",
-      salary: "₹20,000–25,000",
-      contact: "+91 94060 33812"
-    },
-    {
-      student: "Manoj Singh",
-      iti: "ITI Katekalyan",
-      status: "Seeking Work",
-      type: "—",
-      company: "—",
-      role: "—",
-      location: "—",
-      salary: "—",
-      contact: "+91 79745 12098"
+  // Employment Records (Dynamic - No hardcoded/dummy data)
+  let employmentRecords = [];
+  try {
+    const localEmp = JSON.parse(localStorage.getItem('iti_employment_records') || '[]');
+    if (Array.isArray(localEmp)) {
+      employmentRecords = localEmp;
     }
-  ];
+  } catch (e) {
+    employmentRecords = [];
+  }
 
   const tableBody = document.getElementById('employmentTableBody');
   const searchInput = document.getElementById('empSearchInput');
@@ -71,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     tableBody.innerHTML = '';
 
     if (data.length === 0) {
-      tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 32px; color: #94a3b8;">No matching employment records found.</td></tr>`;
+      tableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: #94a3b8;">No employment records found in Google Sheet. Update employment records or sync from your spreadsheet.</td></tr>`;
       return;
     }
 
@@ -131,29 +105,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
   renderTable(employmentRecords);
 
+  // Live fetch from Google Sheet (Employment Tracking Module tab)
+  if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchEmployment === 'function') {
+    GoogleSheetsService.fetchEmployment().then(liveEmp => {
+      if (liveEmp && liveEmp.length > 0) {
+        liveEmp.forEach(le => {
+          if (le.company || le.role || le.status) {
+            employmentRecords.unshift({
+              student: le.role ? `${le.role} Candidate` : 'ITI Graduate',
+              iti: 'Govt. ITI Dantewada',
+              status: le.status || 'Employed',
+              type: le.type || 'Private',
+              company: le.company || '—',
+              role: le.role || '—',
+              location: le.location || '—',
+              salary: le.salaryRange || '—',
+              contact: '—'
+            });
+          }
+        });
+        filterData();
+      }
+    }).catch(err => console.log('Live Employment fetch info:', err.message));
+  }
+
   // Update Employment button
   const btnUpdateEmployment = document.getElementById('btnUpdateEmployment');
   if (btnUpdateEmployment) {
-    btnUpdateEmployment.addEventListener('click', () => {
-      const name = prompt("Enter Student Name to update employment status:", "Anita Markam");
+    btnUpdateEmployment.addEventListener('click', async () => {
+      const name = prompt("Enter Student Name to update employment status:");
       if (name) {
-        const company = prompt("Enter Company / Employer Name:", "NMDC Iron Ore");
+        const company = prompt("Enter Company / Employer Name:");
         if (company) {
-          const role = prompt("Enter Job Role:", "Plant Technician");
-          const salary = prompt("Enter Salary Range:", "₹22,000–26,000");
-          employmentRecords.unshift({
+          const role = prompt("Enter Job Role (e.g. Technician):") || "Technician";
+          const salary = prompt("Enter Salary Range (e.g. ₹15,000–20,000):") || "—";
+          const location = prompt("Enter Job Location:") || "—";
+          const newRec = {
             student: name,
-            iti: "ITI Dantewada",
+            iti: "Govt. ITI Dantewada",
             status: "Employed",
             type: "Private",
             company: company,
-            role: role || "Technician",
-            location: "Kirandul",
-            salary: salary || "₹22,000",
-            contact: "+91 98261 44102"
-          });
+            role: role,
+            location: location,
+            salary: salary,
+            contact: "—"
+          };
+          employmentRecords.unshift(newRec);
+          try {
+            localStorage.setItem('iti_employment_records', JSON.stringify(employmentRecords));
+          } catch(e){}
           filterData();
-          alert(`Employment record updated for ${name}!`);
+
+          // Sync to Google Sheet (Employment Tracking Module)
+          if (window.GoogleSheetsService && typeof GoogleSheetsService.submitEmployment === 'function') {
+            await GoogleSheetsService.submitEmployment({
+              status: 'Employed',
+              type: 'Private',
+              company: company,
+              role: role || 'Technician',
+              location: location || 'Kirandul',
+              salaryRange: salary || '₹22,000',
+              verificationStatus: 'Verified',
+              lastFollowup: new Date().toISOString().slice(0, 10),
+              remark: `Updated via Portal for ${name}`,
+              privateJob: company
+            });
+          }
+
+          alert(`Employment record updated for ${name} and queued/synced to Google Sheet!`);
         }
       }
     });

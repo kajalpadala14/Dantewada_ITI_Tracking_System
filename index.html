@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -218,7 +218,8 @@
                 <line x1="3" y1="10" x2="21" y2="10"></line>
               </svg>
               <select id="academicYearSelect" class="session-select">
-                <option value="2024-25" selected>Academic year: 2024-25</option>
+                <option value="All" selected>All Academic Years</option>
+                <option value="2024-25">Academic year: 2024-25</option>
                 <option value="2023-24">Academic year: 2023-24</option>
                 <option value="2022-23">Academic year: 2022-23</option>
                 <option value="2021-22">Academic year: 2021-22</option>
@@ -242,9 +243,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valTotalStudents">2,846</div>
+            <div class="stat-value" id="valTotalStudents">0</div>
             <div class="stat-bottom">
-              <span class="stat-badge positive">+12% vs last year</span>
+              <span class="stat-badge neutral" id="badgeTotalStudents">Live Sync</span>
             </div>
           </div>
 
@@ -259,9 +260,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valStudying">1,124</div>
+            <div class="stat-value" id="valStudying">0</div>
             <div class="stat-bottom">
-              <span class="stat-badge positive">+8% vs last year</span>
+              <span class="stat-badge neutral" id="badgeStudying">Live Sync</span>
             </div>
           </div>
 
@@ -276,9 +277,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valPassed">982</div>
+            <div class="stat-value" id="valPassed">0</div>
             <div class="stat-bottom">
-              <span class="stat-badge positive">+15% vs last year</span>
+              <span class="stat-badge neutral" id="badgePassed">Live Sync</span>
             </div>
           </div>
 
@@ -293,9 +294,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valPlaced">614</div>
+            <div class="stat-value" id="valPlaced">0</div>
             <div class="stat-bottom">
-              <span class="stat-badge positive">+22% vs last year</span>
+              <span class="stat-badge neutral" id="badgePlaced">Live Sync</span>
             </div>
           </div>
 
@@ -309,9 +310,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valApprenticeship">368</div>
+            <div class="stat-value" id="valApprenticeship">0</div>
             <div class="stat-bottom">
-              <span class="stat-badge positive">+5% vs last year</span>
+              <span class="stat-badge neutral" id="badgeApprenticeship">Live Sync</span>
             </div>
           </div>
 
@@ -326,9 +327,9 @@
                 </svg>
               </div>
             </div>
-            <div class="stat-value" id="valUntracked">1,500</div>
+            <div class="stat-value" id="valUntracked">0</div>
             <div class="stat-bottom">
-              <span class="stat-badge positive">+3% vs last year</span>
+              <span class="stat-badge neutral" id="badgeUntracked">Live Sync</span>
             </div>
           </div>
         </section>
@@ -399,7 +400,8 @@
     </div>
   </div>
 
-    <script src="src/js/config.js"></script>
+  <script src="src/js/env.js"></script>
+  <script src="src/js/config.js"></script>
   <script src="src/js/common.js"></script>
   <script src="src/js/google-sheets.js"></script>
   <script src="src/js/script.js"></script>

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dantewada ITI Student Tracking System - Administration
  * Matching Screenshot media_1789018107885.png
  */
@@ -37,71 +37,31 @@ document.addEventListener('DOMContentLoaded', () => {
   // State
   let currentTab = 'iti';
 
-  // Data Store
-  const itisData = [
-    {
-      id: 'ITI-01',
-      name: 'Govt. ITI Dantewada',
-      type: 'Government',
-      block: 'Dantewada',
-      district: 'Dantewada',
-      contactPerson: 'R.K. Sharma (Principal)',
-      contactNumber: '07856-252101',
-      status: 'Active'
-    },
-    {
-      id: 'ITI-02',
-      name: 'Govt. ITI Geedam',
-      type: 'Government',
-      block: 'Geedam',
-      district: 'Dantewada',
-      contactPerson: 'A.K. Mandavi (TO)',
-      contactNumber: '07856-252102',
-      status: 'Active'
-    },
-    {
-      id: 'ITI-03',
-      name: 'Govt. ITI Katekalyan',
-      type: 'Government',
-      block: 'Katekalyan',
-      district: 'Dantewada',
-      contactPerson: 'S. Netam (Superintendent)',
-      contactNumber: '07856-252103',
-      status: 'Active'
-    },
-    {
-      id: 'ITI-04',
-      name: 'Govt. ITI Kuakonda',
-      type: 'Government',
-      block: 'Kuakonda',
-      district: 'Dantewada',
-      contactPerson: 'P. Sori (Principal)',
-      contactNumber: '07856-252104',
-      status: 'Active'
-    }
-  ];
+  // Dynamic Data Stores (No hardcoded/dummy records)
+  let itisData = [];
+  try {
+    const local = JSON.parse(localStorage.getItem('iti_admin_itis') || '[]');
+    if (Array.isArray(local)) itisData = local;
+  } catch(e) { itisData = []; }
 
-  const yearsData = [
+  let yearsData = [
     { id: 'AY-2024', name: '2024-25', start: '01 Aug 2024', end: '31 Jul 2025', desc: 'Current Active Academic Session', status: 'Active' },
     { id: 'AY-2023', name: '2023-24', start: '01 Aug 2023', end: '31 Jul 2024', desc: 'Completed Session Records', status: 'Completed' },
     { id: 'AY-2022', name: '2022-23', start: '01 Aug 2022', end: '31 Jul 2023', desc: 'Archived Session Records', status: 'Completed' },
     { id: 'AY-2021', name: '2021-22', start: '01 Aug 2021', end: '31 Jul 2022', desc: 'Archived Session Records', status: 'Completed' }
   ];
 
-  const tradesData = [
-    { code: 'TRD-ELE', name: 'Electrician', type: 'Engineering', duration: '2 Years', itis: '4 ITIs', status: 'Active' },
-    { code: 'TRD-FIT', name: 'Fitter', type: 'Engineering', duration: '2 Years', itis: '3 ITIs', status: 'Active' },
-    { code: 'TRD-COP', name: 'COPA', type: 'Non-Engineering', duration: '1 Year', itis: '4 ITIs', status: 'Active' },
-    { code: 'TRD-WEL', name: 'Welder', type: 'Engineering', duration: '1 Year', itis: '2 ITIs', status: 'Active' },
-    { code: 'TRD-MEC', name: 'Mechanic Diesel', type: 'Engineering', duration: '1 Year', itis: '2 ITIs', status: 'Active' }
-  ];
+  let tradesData = [];
+  try {
+    const local = JSON.parse(localStorage.getItem('iti_admin_trades') || '[]');
+    if (Array.isArray(local)) tradesData = local;
+  } catch(e) { tradesData = []; }
 
-  const usersData = [
-    { id: 'USR-001', name: 'Admin User', email: 'superadmin@cgiti.gov.in', role: 'Super Admin', branch: 'Directorate HQ', status: 'Active' },
-    { id: 'USR-002', name: 'R.K. Sharma', email: 'iti.dantewada@cgiti.gov.in', role: 'Principal Officer', branch: 'Govt. ITI Dantewada', status: 'Active' },
-    { id: 'USR-003', name: 'A.K. Mandavi', email: 'iti.geedam@cgiti.gov.in', role: 'Training Officer', branch: 'Govt. ITI Geedam', status: 'Active' },
-    { id: 'USR-004', name: 'District Collector', email: 'collector.dantewada@cg.nic.in', role: 'District Nodal', branch: 'Collectorate Dantewada', status: 'Active' }
-  ];
+  let usersData = [];
+  try {
+    const local = JSON.parse(localStorage.getItem('iti_admin_users') || '[]');
+    if (Array.isArray(local)) usersData = local;
+  } catch(e) { usersData = []; }
 
   // DOM Elements
   const tabButtons = document.querySelectorAll('.admin-tab-btn');
@@ -177,28 +137,32 @@ document.addEventListener('DOMContentLoaded', () => {
         i.block.toLowerCase().includes(q)
       );
 
-      adminTableBody.innerHTML = filtered.map(item => `
-        <tr>
-          <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id}</td>
-          <td style="font-weight: 500; font-size: 13px;">${item.name}</td>
-          <td style="font-size: 13px; color: var(--text-muted);">${item.type}</td>
-          <td style="font-size: 13px;">${item.block}</td>
-          <td style="font-size: 13px;">${item.district}</td>
-          <td style="font-size: 13px;">${item.contactPerson}</td>
-          <td style="font-size: 13px;">${item.contactNumber}</td>
-          <td>
-            <span class="status-badge active">● ${item.status}</span>
-          </td>
-          <td>
-            <button class="btn-icon-pencil" title="Edit ITI" onclick="editIti('${item.id}')">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      if (filtered.length === 0) {
+        adminTableBody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 36px; color: var(--text-muted);">No ITI records found in Google Sheet.</td></tr>`;
+      } else {
+        adminTableBody.innerHTML = filtered.map(item => `
+          <tr>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id || '—'}</td>
+            <td style="font-weight: 500; font-size: 13px;">${item.name || '—'}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${item.type || 'Government'}</td>
+            <td style="font-size: 13px;">${item.block || '—'}</td>
+            <td style="font-size: 13px;">${item.district || 'Dantewada'}</td>
+            <td style="font-size: 13px;">${item.contactPerson || '—'}</td>
+            <td style="font-size: 13px;">${item.contactNumber || '—'}</td>
+            <td>
+              <span class="status-badge active">● ${item.status || 'Active'}</span>
+            </td>
+            <td>
+              <button class="btn-icon-pencil" title="Edit ITI" onclick="editIti('${item.id}')">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
 
     } else if (currentTab === 'year') {
       btnAddItemText.textContent = '+ Add Academic Year';
@@ -222,26 +186,30 @@ document.addEventListener('DOMContentLoaded', () => {
         y.desc.toLowerCase().includes(q)
       );
 
-      adminTableBody.innerHTML = filtered.map(item => `
-        <tr>
-          <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id}</td>
-          <td style="font-weight: 600; font-size: 13px;">${item.name}</td>
-          <td style="font-size: 13px;">${item.start}</td>
-          <td style="font-size: 13px;">${item.end}</td>
-          <td style="font-size: 13px; color: var(--text-muted);">${item.desc}</td>
-          <td>
-            <span class="status-badge ${item.status === 'Active' ? 'active' : 'completed'}">● ${item.status}</span>
-          </td>
-          <td>
-            <button class="btn-icon-pencil" title="Edit Academic Year">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      if (filtered.length === 0) {
+        adminTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--text-muted);">No Academic Year records found.</td></tr>`;
+      } else {
+        adminTableBody.innerHTML = filtered.map(item => `
+          <tr>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id}</td>
+            <td style="font-weight: 600; font-size: 13px;">${item.name}</td>
+            <td style="font-size: 13px;">${item.start}</td>
+            <td style="font-size: 13px;">${item.end}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${item.desc}</td>
+            <td>
+              <span class="status-badge ${item.status === 'Active' ? 'active' : 'completed'}">● ${item.status}</span>
+            </td>
+            <td>
+              <button class="btn-icon-pencil" title="Edit Academic Year">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
 
     } else if (currentTab === 'trade') {
       btnAddItemText.textContent = '+ Add Trade';
@@ -261,31 +229,35 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       const filtered = tradesData.filter(t =>
-        t.code.toLowerCase().includes(q) ||
-        t.name.toLowerCase().includes(q) ||
-        t.type.toLowerCase().includes(q)
+        (t.code || '').toLowerCase().includes(q) ||
+        (t.name || '').toLowerCase().includes(q) ||
+        (t.type || '').toLowerCase().includes(q)
       );
 
-      adminTableBody.innerHTML = filtered.map(item => `
-        <tr>
-          <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.code}</td>
-          <td style="font-weight: 600; font-size: 13px;">${item.name}</td>
-          <td style="font-size: 13px;">${item.type}</td>
-          <td style="font-size: 13px;">${item.duration}</td>
-          <td style="font-size: 13px; color: var(--text-muted);">${item.itis}</td>
-          <td>
-            <span class="status-badge active">● ${item.status}</span>
-          </td>
-          <td>
-            <button class="btn-icon-pencil" title="Edit Trade">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      if (filtered.length === 0) {
+        adminTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--text-muted);">No Trade records found in Google Sheet.</td></tr>`;
+      } else {
+        adminTableBody.innerHTML = filtered.map(item => `
+          <tr>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.code || '—'}</td>
+            <td style="font-weight: 600; font-size: 13px;">${item.name || '—'}</td>
+            <td style="font-size: 13px;">${item.type || 'Engineering'}</td>
+            <td style="font-size: 13px;">${item.duration || '1-2 Years'}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${item.itis || 'District ITIs'}</td>
+            <td>
+              <span class="status-badge active">● ${item.status || 'Active'}</span>
+            </td>
+            <td>
+              <button class="btn-icon-pencil" title="Edit Trade">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
 
     } else if (currentTab === 'user') {
       btnAddItemText.textContent = '+ Add User';
@@ -305,31 +277,35 @@ document.addEventListener('DOMContentLoaded', () => {
       `;
 
       const filtered = usersData.filter(u =>
-        u.name.toLowerCase().includes(q) ||
-        u.email.toLowerCase().includes(q) ||
-        u.role.toLowerCase().includes(q)
+        (u.name || '').toLowerCase().includes(q) ||
+        (u.email || '').toLowerCase().includes(q) ||
+        (u.role || '').toLowerCase().includes(q)
       );
 
-      adminTableBody.innerHTML = filtered.map(item => `
-        <tr>
-          <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id}</td>
-          <td style="font-weight: 600; font-size: 13px;">${item.name}</td>
-          <td style="font-size: 13px; color: #0284c7;">${item.email}</td>
-          <td style="font-size: 13px;">${item.role}</td>
-          <td style="font-size: 13px; color: var(--text-muted);">${item.branch}</td>
-          <td>
-            <span class="status-badge active">● ${item.status}</span>
-          </td>
-          <td>
-            <button class="btn-icon-pencil" title="Edit User">
-              <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M12 20h9"></path>
-                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-              </svg>
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      if (filtered.length === 0) {
+        adminTableBody.innerHTML = `<tr><td colspan="7" style="text-align: center; padding: 36px; color: var(--text-muted);">No User records found.</td></tr>`;
+      } else {
+        adminTableBody.innerHTML = filtered.map(item => `
+          <tr>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id || '—'}</td>
+            <td style="font-weight: 600; font-size: 13px;">${item.name || '—'}</td>
+            <td style="font-size: 13px; color: #0284c7;">${item.email || '—'}</td>
+            <td style="font-size: 13px;">${item.role || 'Admin'}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${item.branch || 'Directorate'}</td>
+            <td>
+              <span class="status-badge active">● ${item.status || 'Active'}</span>
+            </td>
+            <td>
+              <button class="btn-icon-pencil" title="Edit User">
+                <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9"></path>
+                  <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+                </svg>
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      }
     }
   }
 
@@ -527,12 +503,30 @@ document.addEventListener('DOMContentLoaded', () => {
     `);
   };
 
-  // URL query parameter routing (?tab=iti, ?tab=year, etc.)
-  const urlParams = new URLSearchParams(window.location.search);
-  const tabParam = urlParams.get('tab');
-  if (tabParam && ['iti', 'year', 'trade', 'user'].includes(tabParam)) {
-    switchTab(tabParam);
-  } else {
-    renderCurrentTab();
+  // Live fetch ITIs and Trades from Google Sheets
+  if (window.GoogleSheetsService) {
+    if (typeof GoogleSheetsService.fetchItis === 'function') {
+      GoogleSheetsService.fetchItis().then(liveItis => {
+        if (liveItis && liveItis.length > 0) {
+          itisData = liveItis;
+          if (currentTab === 'iti') renderCurrentTab();
+        }
+      }).catch(err => console.log('Admin ITI fetch info:', err.message));
+    }
+    if (typeof GoogleSheetsService.fetchTrades === 'function') {
+      GoogleSheetsService.fetchTrades().then(liveTrades => {
+        if (liveTrades && liveTrades.length > 0) {
+          tradesData = liveTrades.map(t => ({
+            code: t.code || t.id || 'TRD-GEN',
+            name: t.name || 'Trade',
+            type: 'Engineering',
+            duration: t.duration || '1-2 Years',
+            itis: t.iti || 'District ITIs',
+            status: t.status || 'Active'
+          }));
+          if (currentTab === 'trade') renderCurrentTab();
+        }
+      }).catch(err => console.log('Admin Trade fetch info:', err.message));
+    }
   }
 });

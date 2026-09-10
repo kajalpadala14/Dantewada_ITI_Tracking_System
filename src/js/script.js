@@ -64,10 +64,10 @@ document.addEventListener('DOMContentLoaded', () => {
     itiChartInstance = new Chart(ctxIti, {
       type: 'bar',
       data: {
-        labels: ['ITI Dantewada', 'ITI Gidam', 'ITI Katekalyan', 'ITI Kuakonda'],
+        labels: ['Govt. ITI Dantewada', 'ITI Gidam', 'ITI Katekalyan', 'ITI Kuakonda'],
         datasets: [{
           label: 'Total Students',
-          data: [942, 718, 564, 622],
+          data: [0, 0, 0, 0],
           backgroundColor: '#1d70b8',
           hoverBackgroundColor: '#155e9b',
           borderRadius: 4,
@@ -95,9 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           y: {
             beginAtZero: true,
-            max: 1100,
             grid: { color: '#f1f5f9', drawBorder: false },
-            ticks: { stepSize: 200, color: '#64748b' }
+            ticks: { color: '#64748b' }
           }
         }
       },
@@ -124,9 +123,10 @@ document.addEventListener('DOMContentLoaded', () => {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       
+      const totalDonut = (chart.data.datasets[0].data || []).reduce((a, b) => a + b, 0);
       ctx.font = '700 22px ' + Chart.defaults.font.family;
       ctx.fillStyle = '#0f172a';
-      ctx.fillText('982', centerX, centerY - 8);
+      ctx.fillText(totalDonut.toString(), centerX, centerY - 8);
       
       ctx.font = '500 11px ' + Chart.defaults.font.family;
       ctx.fillStyle = '#64748b';
@@ -140,9 +140,9 @@ document.addEventListener('DOMContentLoaded', () => {
     donutChartInstance = new Chart(ctxDonut, {
       type: 'doughnut',
       data: {
-        labels: ['Employed: 62.5%', 'Seeking work: 37.5%'],
+        labels: ['Employed: 0%', 'Seeking work: 0%'],
         datasets: [{
-          data: [614, 368],
+          data: [0, 0],
           backgroundColor: ['#16a34a', '#f59e0b'],
           borderWidth: 2,
           borderColor: '#ffffff',
@@ -202,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         labels: ['Electrician', 'Fitter', 'COPA', 'Welder'],
         datasets: [{
           label: 'Students',
-          data: [420, 350, 260, 210],
+          data: [0, 0, 0, 0],
           backgroundColor: '#0d9488',
           borderRadius: 3,
           barThickness: 10
@@ -215,7 +215,7 @@ document.addEventListener('DOMContentLoaded', () => {
         layout: { padding: { right: 35 } },
         plugins: { legend: { display: false } },
         scales: {
-          x: { beginAtZero: true, max: 500, grid: { color: '#f1f5f9' } },
+          x: { beginAtZero: true, grid: { color: '#f1f5f9' } },
           y: { grid: { display: false }, ticks: { color: '#334155', font: { size: 12, weight: '500' } } }
         }
       },
@@ -253,7 +253,7 @@ document.addEventListener('DOMContentLoaded', () => {
         labels: ['2021-22', '2022-23', '2023-24', '2024-25'],
         datasets: [{
           label: 'Total Enrolment',
-          data: [1850, 2124, 2490, 2846],
+          data: [0, 0, 0, 0],
           borderColor: '#38bdf8',
           backgroundColor: 'rgba(56, 189, 248, 0.08)',
           pointBackgroundColor: '#ffffff',
@@ -273,11 +273,9 @@ document.addEventListener('DOMContentLoaded', () => {
         scales: {
           x: { grid: { display: false } },
           y: {
-            beginAtZero: false,
-            min: 1500,
-            max: 3100,
+            beginAtZero: true,
             grid: { color: '#f1f5f9' },
-            ticks: { stepSize: 500, callback: (val) => val.toLocaleString() }
+            ticks: { callback: (val) => val.toLocaleString() }
           }
         }
       },
@@ -285,41 +283,114 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // Dynamic Dataset & Metrics Calculation
+  let allStudents = [];
+  try {
+    allStudents = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+  } catch(e) {
+    allStudents = [];
+  }
+
+  function fmt(n) {
+    return (n || 0).toLocaleString();
+  }
+
+  function updateDashboard(selectedYear = 'All') {
+    const filtered = (selectedYear === 'All') 
+      ? allStudents 
+      : allStudents.filter(s => s.year === selectedYear);
+
+    const totalStudents = filtered.length;
+    const studyingCount = filtered.filter(s => s.trainingStatus === 'Under Training').length;
+    const passedCount = filtered.filter(s => s.trainingStatus === 'Passed' || s.trainingStatus === 'Completed').length;
+    const employedCount = filtered.filter(s => s.employmentStatus === 'Employed').length;
+    const apprenticeshipCount = filtered.filter(s => s.employmentStatus === 'Apprenticeship').length;
+    const untrackedCount = Math.max(0, totalStudents - (studyingCount + passedCount + employedCount + apprenticeshipCount));
+
+    const valTotal = document.getElementById('valTotalStudents');
+    const valStudying = document.getElementById('valStudying');
+    const valPassed = document.getElementById('valPassed');
+    const valPlaced = document.getElementById('valPlaced');
+    const valApprenticeship = document.getElementById('valApprenticeship');
+    const valUntracked = document.getElementById('valUntracked');
+
+    if (valTotal) valTotal.textContent = fmt(totalStudents);
+    if (valStudying) valStudying.textContent = fmt(studyingCount);
+    if (valPassed) valPassed.textContent = fmt(passedCount);
+    if (valPlaced) valPlaced.textContent = fmt(employedCount);
+    if (valApprenticeship) valApprenticeship.textContent = fmt(apprenticeshipCount);
+    if (valUntracked) valUntracked.textContent = fmt(untrackedCount);
+
+    // Update ITI Bar Chart
+    if (itiChartInstance) {
+      const itis = ['Govt. ITI Dantewada', 'ITI Gidam', 'ITI Katekalyan', 'ITI Kuakonda'];
+      const itiCounts = itis.map(itiName => {
+        const needle = itiName.toLowerCase().replace('govt. ', '').trim();
+        return filtered.filter(s => (s.iti || '').toLowerCase().includes(needle)).length;
+      });
+      itiChartInstance.data.datasets[0].data = itiCounts;
+      const maxCount = Math.max(...itiCounts, 10);
+      itiChartInstance.options.scales.y.max = Math.ceil(maxCount * 1.2);
+      itiChartInstance.update();
+    }
+
+    // Update Employment Donut Chart
+    if (donutChartInstance) {
+      const seekingCount = filtered.filter(s => s.employmentStatus === 'Seeking Work').length;
+      const totalEmpReported = employedCount + seekingCount;
+      const empPercent = totalEmpReported > 0 ? Math.round((employedCount / totalEmpReported) * 100) : 0;
+      const seekPercent = totalEmpReported > 0 ? (100 - empPercent) : 0;
+
+      donutChartInstance.data.labels = [
+        `Employed: ${empPercent}%`,
+        `Seeking work: ${seekPercent}%`
+      ];
+      donutChartInstance.data.datasets[0].data = [employedCount, seekingCount];
+      donutChartInstance.update();
+    }
+
+    // Update Trade Chart
+    if (tradeChartInstance) {
+      const trades = ['Electrician', 'Fitter', 'COPA', 'Welder'];
+      const tradeCounts = trades.map(t => filtered.filter(s => (s.trade || '').toLowerCase().includes(t.toLowerCase())).length);
+      tradeChartInstance.data.datasets[0].data = tradeCounts;
+      const maxTrade = Math.max(...tradeCounts, 10);
+      tradeChartInstance.options.scales.x.max = Math.ceil(maxTrade * 1.2);
+      tradeChartInstance.update();
+    }
+
+    // Update Year-wise Trend Chart
+    if (trendChartInstance) {
+      const years = ['2021-22', '2022-23', '2023-24', '2024-25'];
+      const yearCounts = years.map(yr => allStudents.filter(s => s.year === yr).length);
+      trendChartInstance.data.datasets[0].data = yearCounts;
+      const maxYear = Math.max(...yearCounts, 10);
+      trendChartInstance.options.scales.y.max = Math.ceil(maxYear * 1.2);
+      trendChartInstance.update();
+    }
+  }
+
   // Academic Year Selector Filter in Dashboard
   const academicYearSelect = document.getElementById('academicYearSelect');
   if (academicYearSelect) {
     academicYearSelect.addEventListener('change', (e) => {
-      const yr = e.target.value;
-      const valTotal = document.getElementById('valTotalStudents');
-      const valStudying = document.getElementById('valStudying');
-      const valPassed = document.getElementById('valPassed');
-      const valPlaced = document.getElementById('valPlaced');
-      const valApprenticeship = document.getElementById('valApprenticeship');
-      const valUntracked = document.getElementById('valUntracked');
-
-      if (yr === '2024-25') {
-        if (valTotal) valTotal.textContent = '2,846';
-        if (valStudying) valStudying.textContent = '1,124';
-        if (valPassed) valPassed.textContent = '982';
-        if (valPlaced) valPlaced.textContent = '614';
-        if (valApprenticeship) valApprenticeship.textContent = '368';
-        if (valUntracked) valUntracked.textContent = '1,500';
-        if (itiChartInstance) {
-          itiChartInstance.data.datasets[0].data = [942, 718, 564, 622];
-          itiChartInstance.update();
-        }
-      } else {
-        if (valTotal) valTotal.textContent = '2,490';
-        if (valStudying) valStudying.textContent = '980';
-        if (valPassed) valPassed.textContent = '890';
-        if (valPlaced) valPlaced.textContent = '540';
-        if (valApprenticeship) valApprenticeship.textContent = '310';
-        if (valUntracked) valUntracked.textContent = '1,280';
-        if (itiChartInstance) {
-          itiChartInstance.data.datasets[0].data = [820, 640, 500, 530];
-          itiChartInstance.update();
-        }
-      }
+      updateDashboard(e.target.value);
     });
+  }
+
+  // Initial render with stored/empty state
+  updateDashboard(academicYearSelect ? academicYearSelect.value : 'All');
+
+  // Fetch live student data from Google Sheets and re-render dashboard
+  if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchStudents === 'function') {
+    GoogleSheetsService.fetchStudents().then(liveRows => {
+      if (liveRows && liveRows.length > 0) {
+        const studentMap = new Map();
+        allStudents.forEach(s => studentMap.set(s.id, s));
+        liveRows.forEach(s => studentMap.set(s.id, s));
+        allStudents = Array.from(studentMap.values());
+        updateDashboard(academicYearSelect ? academicYearSelect.value : 'All');
+      }
+    }).catch(err => console.log('Dashboard live fetch info:', err.message));
   }
 });

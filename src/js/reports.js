@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dantewada ITI Student Tracking System - Reports
  * Matching Screenshot media_1789017760309.png
  */
@@ -34,72 +34,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Sample Preview Data (Matching screenshot media_1789017760309.png)
-  const reportData = [
-    {
-      id: 'STU-2024-001',
-      name: 'Rohit Kumar',
-      iti: 'Govt. ITI Dantewada',
-      trade: 'Electrician',
-      year: '2024-25',
-      trainingStatus: 'Completed',
-      employmentStatus: 'Employed'
-    },
-    {
-      id: 'STU-2024-002',
-      name: 'Anita Markam',
-      iti: 'Govt. ITI Dantewada',
-      trade: 'COPA',
-      year: '2024-25',
-      trainingStatus: 'Under Training',
-      employmentStatus: 'Seeking Work'
-    },
-    {
-      id: 'STU-2024-003',
-      name: 'Suresh Netam',
-      iti: 'Govt. ITI Geedam',
-      trade: 'Fitter',
-      year: '2023-24',
-      trainingStatus: 'Completed',
-      employmentStatus: 'Employed'
-    },
-    {
-      id: 'STU-2024-004',
-      name: 'Priya Kashyap',
-      iti: 'Govt. ITI Katekalyan',
-      trade: 'Welder',
-      year: '2023-24',
-      trainingStatus: 'Completed',
-      employmentStatus: 'Seeking Work'
-    },
-    {
-      id: 'STU-2024-005',
-      name: 'Manoj Baghel',
-      iti: 'Govt. ITI Dantewada',
-      trade: 'Electrician',
-      year: '2024-25',
-      trainingStatus: 'Under Training',
-      employmentStatus: 'Under Training'
-    },
-    {
-      id: 'STU-2024-006',
-      name: 'Sunita Sori',
-      iti: 'Govt. ITI Kuakonda',
-      trade: 'COPA',
-      year: '2022-23',
-      trainingStatus: 'Completed',
-      employmentStatus: 'Employed'
-    },
-    {
-      id: 'STU-2024-007',
-      name: 'Ramesh Poyam',
-      iti: 'Govt. ITI Geedam',
-      trade: 'Mechanic Diesel',
-      year: '2023-24',
-      trainingStatus: 'Completed',
-      employmentStatus: 'Seeking Work'
+  // Dynamic Report Records (No hardcoded/dummy records)
+  let reportData = [];
+  try {
+    const local = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+    if (Array.isArray(local)) {
+      reportData = local;
     }
-  ];
+  } catch (e) {
+    reportData = [];
+  }
 
   const tableBody = document.getElementById('reportsTableBody');
   const previewSubtext = document.getElementById('previewSubtext');
@@ -164,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     if (previewSubtext) {
-      previewSubtext.textContent = `Static sample preview • ${records.length} records`;
+      previewSubtext.textContent = `Live data preview • ${records.length} records`;
     }
   }
 
@@ -241,4 +185,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initial render
   renderTable(currentRecords);
+
+  // Live fetch from Google Sheets
+  if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchStudents === 'function') {
+    GoogleSheetsService.fetchStudents().then(liveRows => {
+      if (liveRows && liveRows.length > 0) {
+        const studentMap = new Map();
+        reportData.forEach(s => studentMap.set(s.id, s));
+        liveRows.forEach(s => studentMap.set(s.id, s));
+        reportData = Array.from(studentMap.values());
+        currentRecords = [...reportData];
+        renderTable(currentRecords);
+      }
+    }).catch(err => console.log('Reports live fetch info:', err.message));
+  }
 });

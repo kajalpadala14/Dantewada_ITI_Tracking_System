@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -220,7 +220,7 @@
               <div class="form-grid-3">
                 <div class="form-field">
                   <label class="form-label">Student ID *</label>
-                  <input type="text" id="addStuId" class="form-input" placeholder="Enter student id" required value="STU-2024-0982">
+                  <input type="text" id="addStuId" class="form-input" placeholder="e.g. STU-2025-001" required>
                 </div>
                 <div class="form-field">
                   <label class="form-label">Student Name *</label>
@@ -410,27 +410,27 @@
                 <h3 class="form-section-title">Identification Information</h3>
               </div>
 
-              <!-- Row 1: Registration Number, Aadhar Number, Government / Reference Number -->
+              <!-- Row 1: Registration Number, ITI Roll Number, Government ID Reference Number -->
               <div class="form-grid-3">
                 <div class="form-field">
                   <label class="form-label">Registration Number</label>
-                  <input type="text" id="addStuRegNo" class="form-input" placeholder="Optional reference">
+                  <input type="text" id="addStuRegNo" class="form-input" placeholder="e.g. REG-2024-001">
                 </div>
                 <div class="form-field">
-                  <label class="form-label">Aadhar Number</label>
-                  <input type="text" id="addStuAadhar" class="form-input" placeholder="Optional reference">
+                  <label class="form-label">ITI Roll Number</label>
+                  <input type="text" id="addStuRollNo" class="form-input" placeholder="e.g. ROLL-2024-042">
                 </div>
                 <div class="form-field">
-                  <label class="form-label">Government / Reference Number</label>
-                  <input type="text" id="addStuGovRef" class="form-input" placeholder="Optional reference">
+                  <label class="form-label">Government ID Reference Number</label>
+                  <input type="text" id="addStuGovRef" class="form-input" placeholder="Aadhar or Govt ID Ref">
                 </div>
               </div>
             </div>
 
             <!-- Action Buttons Row -->
             <div class="form-actions-row">
-              <button type="submit" class="btn-primary-add" style="padding: 9px 22px;">
-                Save Student
+              <button type="submit" class="btn-primary-add" id="btnSaveStudent" style="padding: 9px 22px;">
+                Save Student & Sync to Google Sheet
               </button>
               <a href="students.html" class="btn-cancel-top" style="text-decoration: none; padding: 8px 18px;">
                 Cancel
@@ -484,7 +484,8 @@
     </div>
   </div>
 
-    <script src="../js/config.js"></script>
+  <script src="../js/env.js"></script>
+  <script src="../js/config.js"></script>
   <script src="../js/common.js"></script>
   <script src="../js/google-sheets.js"></script>
   <script src="../js/add-student.js"></script>
