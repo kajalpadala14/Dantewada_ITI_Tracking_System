@@ -103,6 +103,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }).catch(() => {});
   }
 
+  // Auto-sync Block based on ITI selection
+  const itiSelect = document.getElementById('addStuItiName');
+  const blockSelect = document.getElementById('addStuBlock');
+  if (itiSelect && blockSelect) {
+    itiSelect.addEventListener('change', () => {
+      const val = itiSelect.value.toLowerCase();
+      if (val.includes('dantewada')) blockSelect.value = 'Dantewada';
+      else if (val.includes('gidam') || val.includes('geedam')) blockSelect.value = 'Geedam';
+      else if (val.includes('katekalyan')) blockSelect.value = 'Katekalyan';
+      else if (val.includes('kuakonda')) blockSelect.value = 'Kuakonda';
+    });
+  }
+
   // Main Form Submit Handler
   const form = document.getElementById('mainAddStudentForm');
   const btnSave = document.getElementById('btnSaveStudent');

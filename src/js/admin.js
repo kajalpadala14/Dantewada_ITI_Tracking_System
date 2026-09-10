@@ -388,7 +388,14 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
             <div class="form-field">
               <label class="form-label">Block</label>
-              <input type="text" class="form-input" placeholder="e.g. Bacheli">
+              <select class="form-select">
+                <option value="Dantewada">Dantewada</option>
+                <option value="Geedam">Geedam</option>
+                <option value="Katekalyan">Katekalyan</option>
+                <option value="Kuakonda">Kuakonda</option>
+                <option value="Bacheli">Bacheli</option>
+                <option value="Kirandul">Kirandul</option>
+              </select>
             </div>
             <div class="form-field">
               <label class="form-label">District</label>
