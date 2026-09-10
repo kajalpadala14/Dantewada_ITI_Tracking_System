@@ -15,13 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     sidebarCloseBtn.addEventListener('click', () => sidebar.classList.remove('open'));
   }
 
-  // Collapsible Menu Groups
-  document.querySelectorAll('.menu-group .menu-item').forEach(header => {
-    header.addEventListener('click', () => {
-      const parent = header.closest('.menu-group');
-      if (parent) parent.classList.toggle('open');
-    });
-  });
 
   // Download Sample Template (Exact 24 Columns matching Student Registration sheet)
   const btnDownloadTemplate = document.getElementById('btnDownloadTemplate');

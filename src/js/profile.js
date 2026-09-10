@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dantewada ITI Student Tracking System - Profile (Admin / Officer Profile)
  * Matching screenshot layout but tailored for Administrator / Officer
  */
@@ -21,18 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Sidebar accordions
-  const menuGroups = document.querySelectorAll('.menu-group');
-  menuGroups.forEach(group => {
-    const header = group.querySelector('.menu-item');
-    if (header) {
-      header.addEventListener('click', (e) => {
-        if (!e.target.closest('.submenu')) {
-          group.classList.toggle('open');
-        }
-      });
-    }
-  });
 
   // Profile Edit Modal
   const profileModal = document.getElementById('profileModal');

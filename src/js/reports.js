@@ -21,18 +21,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Sidebar accordions
-  const menuGroups = document.querySelectorAll('.menu-group');
-  menuGroups.forEach(group => {
-    const header = group.querySelector('.menu-item');
-    if (header) {
-      header.addEventListener('click', (e) => {
-        if (!e.target.closest('.submenu')) {
-          group.classList.toggle('open');
-        }
-      });
-    }
-  });
 
   // Dynamic Report Records (No hardcoded/dummy records)
   let reportData = [];

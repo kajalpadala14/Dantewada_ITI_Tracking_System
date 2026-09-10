@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Dantewada ITI Student Tracking System - Common Shared Functionality
  * Handles global UI behavior across all portal pages
  */
@@ -38,10 +38,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const menuGroups = document.querySelectorAll('.menu-group');
   menuGroups.forEach(group => {
     const header = group.querySelector('.menu-item');
-    if (header) {
+    if (header && !header.dataset.accordionAttached) {
+      header.dataset.accordionAttached = 'true';
       header.addEventListener('click', (e) => {
         // Prevent toggling if user clicked directly on a submenu item
         if (!e.target.closest('.submenu')) {
+          e.preventDefault();
           group.classList.toggle('open');
         }
       });
