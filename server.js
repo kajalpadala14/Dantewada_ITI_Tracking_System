@@ -43,10 +43,20 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let reqUrl = req.url.split('?')[0];
 
-  // Enable CORS for frontend running on other ports (e.g. VS Code Live Server on 5500)
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  // Standard Security Headers
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+
+  // CORS: Restrict to local development origins (e.g. Live Server on 5500, Vite, localhost)
+  const origin = req.headers.origin;
+  if (origin && (/^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin))) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    res.setHeader('Vary', 'Origin');
+  }
 
   if (req.method === 'OPTIONS') {
     res.writeHead(204);
@@ -79,6 +89,16 @@ const server = http.createServer((req, res) => {
         return;
       }
       try {
+        let forwardBody = body;
+        const secretToken = process.env.API_SECRET_TOKEN || envVars.API_SECRET_TOKEN;
+        if (secretToken) {
+          try {
+            const parsedObj = JSON.parse(body);
+            parsedObj.token = secretToken;
+            forwardBody = JSON.stringify(parsedObj);
+          } catch(e) {}
+        }
+
         const parsedUrl = new URL(scriptUrl);
         const postReq = https.request(parsedUrl, {
           method: 'POST',
@@ -95,7 +115,7 @@ const server = http.createServer((req, res) => {
           res.writeHead(500, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ status: 'error', message: err.message }));
         });
-        postReq.write(body);
+        postReq.write(forwardBody);
         postReq.end();
       } catch (err) {
         res.writeHead(500, { 'Content-Type': 'application/json' });
@@ -109,9 +129,35 @@ const server = http.createServer((req, res) => {
     reqUrl = '/index.html';
   }
 
-  const filePath = path.join(__dirname, reqUrl);
+  // Path Traversal & Dot-file Access Guard
+  const normalizedPath = path.normalize(reqUrl).replace(/^([a-zA-Z]:)?(\.\.[\/\\])+/, '');
+  const filePath = path.resolve(__dirname, '.' + (normalizedPath.startsWith('/') ? normalizedPath : '/' + normalizedPath));
+
+  // Verify file path is within project root
+  if (!filePath.startsWith(__dirname)) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    res.end('403 Forbidden');
+    return;
+  }
+
+  // Block sensitive, hidden files, and backend scripts
+  const baseName = path.basename(filePath).toLowerCase();
+  const relPath = path.relative(__dirname, filePath).toLowerCase();
+  if (baseName.startsWith('.') || baseName === 'server.js' || baseName === 'package.json' || baseName === 'package-lock.json' || relPath.includes('node_modules')) {
+    res.writeHead(403, { 'Content-Type': 'text/plain' });
+    res.end('403 Forbidden');
+    return;
+  }
+
   const ext = path.extname(filePath).toLowerCase();
-  const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+  const contentType = MIME_TYPES[ext];
+
+  // Disallow serving unlisted file extensions
+  if (!contentType) {
+    res.writeHead(404, { 'Content-Type': 'text/plain' });
+    res.end('404 Not Found');
+    return;
+  }
 
   fs.readFile(filePath, (err, content) => {
     if (err) {

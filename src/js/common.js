@@ -1,7 +1,15 @@
 /**
- * Dantewada ITI Student Tracking System - Common Shared Functionality
- * Handles global UI behavior across all portal pages
+ * Global HTML Sanitizer for XSS Prevention
  */
+window.escapeHtml = function(str) {
+  if (str === null || str === undefined) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+};
 
 document.addEventListener('DOMContentLoaded', () => {
   // 1. Mobile Sidebar Toggle (Supports both .open and .active classes)

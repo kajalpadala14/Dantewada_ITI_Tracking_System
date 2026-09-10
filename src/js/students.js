@@ -75,43 +75,45 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const esc = window.escapeHtml || (s => s == null ? '' : String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     data.forEach(student => {
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td style="font-family: monospace; font-size: 12px; color: #475569;">${student.id}</td>
+        <td style="font-family: monospace; font-size: 12px; color: #475569;">${esc(student.id)}</td>
         <td>
           <div class="student-col">
-            <div class="student-avatar">${getInitials(student.name)}</div>
-            <div class="student-name-text">${student.name}</div>
+            <div class="student-avatar">${esc(getInitials(student.name))}</div>
+            <div class="student-name-text">${esc(student.name)}</div>
           </div>
         </td>
-        <td>${student.iti}</td>
-        <td>${student.trade}</td>
-        <td>${student.year}</td>
+        <td>${esc(student.iti)}</td>
+        <td>${esc(student.trade)}</td>
+        <td>${esc(student.year)}</td>
         <td>
           <span class="status-badge ${getTrainingBadgeClass(student.trainingStatus)}">
-            ${student.trainingStatus}
+            ${esc(student.trainingStatus)}
           </span>
         </td>
         <td>
           <span class="status-badge ${getEmploymentBadgeClass(student.employmentStatus || 'Not Applicable')}">
-            ${student.employmentStatus || 'Not Applicable'}
+            ${esc(student.employmentStatus || 'Not Applicable')}
           </span>
         </td>
         <td class="text-right">
           <div class="action-icons-group">
-            <button class="btn-table-action btn-view" title="View details" data-id="${student.id}">
+            <button class="btn-table-action btn-view" title="View details" data-id="${esc(student.id)}">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
             </button>
-            <button class="btn-table-action btn-edit" title="Edit student" data-id="${student.id}">
+            <button class="btn-table-action btn-edit" title="Edit student" data-id="${esc(student.id)}">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
               </svg>
             </button>
-            <button class="btn-table-action btn-delete" title="Delete record" data-id="${student.id}">
+            <button class="btn-table-action btn-delete" title="Delete record" data-id="${esc(student.id)}">
               <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="3 6 5 6 21 6"></polyline>
                 <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
@@ -259,6 +261,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const s = studentsData.find(item => item.id === id);
     if (!s || !modalBody) return;
 
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     modalBody.innerHTML = `
       <div style="display: flex; flex-direction: column; gap: 16px;">
         <!-- Section 1: Basic Information -->
@@ -267,15 +271,15 @@ document.addEventListener('DOMContentLoaded', () => {
             1. Personal & Contact Details
           </h4>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-            <div><span style="color:#64748b; font-size:12px;">Full Name:</span> <strong style="font-size:13px; color:#0f172a;">${s.name || '—'}</strong></div>
-            <div><span style="color:#64748b; font-size:12px;">Father Name:</span> <span style="font-size:13px; color:#0f172a;">${s.fatherName || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Mother Name:</span> <span style="font-size:13px; color:#0f172a;">${s.motherName || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Gender:</span> <span style="font-size:13px; color:#0f172a;">${s.gender || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Date of Birth:</span> <span style="font-size:13px; color:#0f172a;">${s.dob || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Mobile Number:</span> <span style="font-size:13px; color:#0f172a;">${s.mobile || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Alternate Mobile:</span> <span style="font-size:13px; color:#0f172a;">${s.altMobile || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Email ID:</span> <span style="font-size:13px; color:#0f172a;">${s.email || '—'}</span></div>
-            <div style="grid-column: 1 / -1;"><span style="color:#64748b; font-size:12px;">Address:</span> <span style="font-size:13px; color:#0f172a;">${s.address || '—'}, Block: ${s.block || '—'}, District: ${s.district || 'Dantewada'}, State: ${s.state || 'Chhattisgarh'}, PIN: ${s.pin || '494449'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Full Name:</span> <strong style="font-size:13px; color:#0f172a;">${esc(s.name) || '—'}</strong></div>
+            <div><span style="color:#64748b; font-size:12px;">Father Name:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.fatherName) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Mother Name:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.motherName) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Gender:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.gender) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Date of Birth:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.dob) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Mobile Number:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.mobile) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Alternate Mobile:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.altMobile) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Email ID:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.email) || '—'}</span></div>
+            <div style="grid-column: 1 / -1;"><span style="color:#64748b; font-size:12px;">Address:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.address) || '—'}, Block: ${esc(s.block) || '—'}, District: ${esc(s.district) || 'Dantewada'}, State: ${esc(s.state) || 'Chhattisgarh'}, PIN: ${esc(s.pin) || '494449'}</span></div>
           </div>
         </div>
 
@@ -285,14 +289,14 @@ document.addEventListener('DOMContentLoaded', () => {
             2. ITI & Academic Details
           </h4>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-            <div><span style="color:#64748b; font-size:12px;">ITI Institution:</span> <strong style="font-size:13px; color:#0f172a;">${s.iti || '—'}</strong></div>
-            <div><span style="color:#64748b; font-size:12px;">Trade:</span> <strong style="font-size:13px; color:#0f172a;">${s.trade || '—'}</strong></div>
-            <div><span style="color:#64748b; font-size:12px;">Academic Session:</span> <span style="font-size:13px; color:#0f172a;">${s.year || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Admission Date:</span> <span style="font-size:13px; color:#0f172a;">${s.admissionDate || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Course Duration:</span> <span style="font-size:13px; color:#0f172a;">${s.duration || '2 Years'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Expected Completion:</span> <span style="font-size:13px; color:#0f172a;">${s.expectedDate || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Training Status:</span> <span class="status-badge ${getTrainingBadgeClass(s.trainingStatus)}">${s.trainingStatus || 'Under Training'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Employment Status:</span> <span class="status-badge ${getEmploymentBadgeClass(s.employmentStatus || 'Not Applicable')}">${s.employmentStatus || 'Not Applicable'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">ITI Institution:</span> <strong style="font-size:13px; color:#0f172a;">${esc(s.iti) || '—'}</strong></div>
+            <div><span style="color:#64748b; font-size:12px;">Trade:</span> <strong style="font-size:13px; color:#0f172a;">${esc(s.trade) || '—'}</strong></div>
+            <div><span style="color:#64748b; font-size:12px;">Academic Session:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.year) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Admission Date:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.admissionDate) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Course Duration:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.duration) || '2 Years'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Expected Completion:</span> <span style="font-size:13px; color:#0f172a;">${esc(s.expectedDate) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Training Status:</span> <span class="status-badge ${getTrainingBadgeClass(s.trainingStatus)}">${esc(s.trainingStatus) || 'Under Training'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Employment Status:</span> <span class="status-badge ${getEmploymentBadgeClass(s.employmentStatus || 'Not Applicable')}">${esc(s.employmentStatus) || 'Not Applicable'}</span></div>
           </div>
         </div>
 
@@ -302,10 +306,10 @@ document.addEventListener('DOMContentLoaded', () => {
             3. Identification Numbers
           </h4>
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px;">
-            <div><span style="color:#64748b; font-size:12px;">Student ID:</span> <span style="font-family:monospace; font-weight:600; color:#1e40af;">${s.id}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Registration Number:</span> <span style="font-family:monospace; color:#334155;">${s.regNumber || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">ITI Roll Number:</span> <span style="font-family:monospace; color:#334155;">${s.rollNumber || '—'}</span></div>
-            <div><span style="color:#64748b; font-size:12px;">Government ID Reference:</span> <span style="font-family:monospace; color:#334155;">${s.govId || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Student ID:</span> <span style="font-family:monospace; font-weight:600; color:#1e40af;">${esc(s.id)}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Registration Number:</span> <span style="font-family:monospace; color:#334155;">${esc(s.regNumber) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">ITI Roll Number:</span> <span style="font-family:monospace; color:#334155;">${esc(s.rollNumber) || '—'}</span></div>
+            <div><span style="color:#64748b; font-size:12px;">Government ID Reference:</span> <span style="font-family:monospace; color:#334155;">${esc(s.govId) || '—'}</span></div>
           </div>
         </div>
       </div>

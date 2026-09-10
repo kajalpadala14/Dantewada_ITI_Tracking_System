@@ -54,6 +54,19 @@ var SCHEMAS = {
 
 function doGet(e) {
   try {
+    // Optional Security Token Check
+    var scriptProps = PropertiesService.getScriptProperties();
+    var expectedToken = scriptProps ? scriptProps.getProperty("API_SECRET_TOKEN") : null;
+    var receivedToken = (e && e.parameter ? e.parameter.token : "");
+    if (expectedToken && expectedToken.trim() !== "") {
+      if (!receivedToken || receivedToken.trim() !== expectedToken.trim()) {
+        return jsonOutput({
+          status: "error",
+          message: "Unauthorized: Invalid or missing security token"
+        });
+      }
+    }
+
     var ss = SpreadsheetApp.getActiveSpreadsheet();
     var action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "";
     
@@ -70,6 +83,12 @@ function doGet(e) {
     }
 
     var sheetName = (e && e.parameter && e.parameter.sheet) ? e.parameter.sheet : "Student Registration";
+    if (!SCHEMAS[sheetName]) {
+      return jsonOutput({
+        status: "error",
+        message: "Invalid or unauthorized sheet name"
+      });
+    }
     var rows = getSheetRows(ss, sheetName);
     
     return jsonOutput({
@@ -132,9 +151,28 @@ function doPost(e) {
       body = e.parameter;
     }
     
+    // Optional Security Token Check (Set in Project Settings > Script Properties: API_SECRET_TOKEN)
+    var scriptProps = PropertiesService.getScriptProperties();
+    var expectedToken = scriptProps ? scriptProps.getProperty("API_SECRET_TOKEN") : null;
+    var receivedToken = body.token || (e && e.parameter ? e.parameter.token : "");
+    if (expectedToken && expectedToken.trim() !== "") {
+      if (!receivedToken || receivedToken.trim() !== expectedToken.trim()) {
+        return jsonOutput({
+          status: "error",
+          message: "Unauthorized: Invalid or missing security token"
+        });
+      }
+    }
+
     var sheetName = body.sheet || "Student Registration";
+    if (!SCHEMAS[sheetName]) {
+      return jsonOutput({
+        status: "error",
+        message: "Invalid or unauthorized sheet name"
+      });
+    }
+
     var sheet = ss.getSheetByName(sheetName);
-    
     if (!sheet) {
       sheet = ss.insertSheet(sheetName);
       if (SCHEMAS[sheetName]) {
@@ -153,6 +191,12 @@ function doPost(e) {
     // 1. Check if DELETE Action
     if (body.action === "delete" || body.action === "deleteRow") {
       var idToDelete = (body.id || body.studentId || "").toString().trim().toLowerCase();
+      if (!idToDelete || idToDelete.length < 2) {
+        return jsonOutput({
+          status: "error",
+          message: "Invalid or missing ID for deletion"
+        });
+      }
       var idColIndex = 0;
       if (body.idColumn) {
         for (var c = 0; c < headers.length; c++) {
@@ -255,6 +299,16 @@ function doPost(e) {
   }
 }
 
+function sanitizeCellValue(val) {
+  if (val === null || val === undefined) return "";
+  var str = val.toString();
+  // Prevent Formula / CSV Injection in Google Sheets
+  if (/^[=+\-@\t\r]/.test(str)) {
+    return "'" + str;
+  }
+  return val;
+}
+
 function buildRowFromData(headers, inputData) {
   var row = [];
   var lowerInput = {};
@@ -268,11 +322,11 @@ function buildRowFromData(headers, inputData) {
     var lowerHeader = cleanHeader.toLowerCase();
     
     if (inputData[rawHeader] !== undefined && inputData[rawHeader] !== null) {
-      row.push(inputData[rawHeader]);
+      row.push(sanitizeCellValue(inputData[rawHeader]));
     } else if (inputData[cleanHeader] !== undefined && inputData[cleanHeader] !== null) {
-      row.push(inputData[cleanHeader]);
+      row.push(sanitizeCellValue(inputData[cleanHeader]));
     } else if (lowerInput[lowerHeader] !== undefined && lowerInput[lowerHeader] !== null) {
-      row.push(lowerInput[lowerHeader]);
+      row.push(sanitizeCellValue(lowerInput[lowerHeader]));
     } else {
       row.push("");
     }

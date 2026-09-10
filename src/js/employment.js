@@ -109,22 +109,24 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     data.forEach(item => {
       const badgeClass = item.status === 'Employed' ? 'employed' : 'seeking-work';
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td style="font-weight: 600; color: #0f172a;">${item.student}</td>
-        <td>${item.iti}</td>
+        <td style="font-weight: 600; color: #0f172a;">${esc(item.student)}</td>
+        <td>${esc(item.iti)}</td>
         <td>
-          <span class="status-badge ${badgeClass}">${item.status}</span>
+          <span class="status-badge ${badgeClass}">${esc(item.status)}</span>
         </td>
-        <td>${item.type}</td>
-        <td>${item.company}</td>
-        <td>${item.role}</td>
-        <td>${item.location}</td>
-        <td>${item.salary}</td>
+        <td>${esc(item.type)}</td>
+        <td>${esc(item.company)}</td>
+        <td>${esc(item.role)}</td>
+        <td>${esc(item.location)}</td>
+        <td>${esc(item.salary)}</td>
         <td class="text-right">
-          <span class="link-action-text btn-view-emp" data-name="${item.student}">
+          <span class="link-action-text btn-view-emp" data-name="${esc(item.student)}">
             View record &rsaquo;
           </span>
         </td>
@@ -249,42 +251,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const item = employmentRecords.find(r => r.student === studentName);
     if (!item || !empModalBody) return;
 
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     empModalBody.innerHTML = `
       <div class="modal-detail-row">
         <span class="detail-label">Student Name:</span>
-        <span class="detail-value">${item.student}</span>
+        <span class="detail-value">${esc(item.student)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">ITI Institution:</span>
-        <span class="detail-value">${item.iti}</span>
+        <span class="detail-value">${esc(item.iti)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Employment Status:</span>
-        <span class="status-badge ${item.status === 'Employed' ? 'employed' : 'seeking-work'}">${item.status}</span>
+        <span class="status-badge ${item.status === 'Employed' ? 'employed' : 'seeking-work'}">${esc(item.status)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Employment Type:</span>
-        <span class="detail-value">${item.type}</span>
+        <span class="detail-value">${esc(item.type)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Company / Employer:</span>
-        <span class="detail-value">${item.company}</span>
+        <span class="detail-value">${esc(item.company)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Designation / Role:</span>
-        <span class="detail-value">${item.role}</span>
+        <span class="detail-value">${esc(item.role)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Job Location:</span>
-        <span class="detail-value">${item.location}</span>
+        <span class="detail-value">${esc(item.location)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Monthly Salary Range:</span>
-        <span class="detail-value">${item.salary}</span>
+        <span class="detail-value">${esc(item.salary)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Contact Number:</span>
-        <span class="detail-value">${item.contact}</span>
+        <span class="detail-value">${esc(item.contact)}</span>
       </div>
     `;
 

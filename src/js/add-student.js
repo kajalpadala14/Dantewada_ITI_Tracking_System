@@ -29,33 +29,42 @@ document.addEventListener('DOMContentLoaded', () => {
         btnSave.textContent = 'Saving & Syncing to Google Sheet...';
       }
 
+      // Sanitizer to prevent spreadsheet formula injection (=, +, -, @)
+      function sanitizeInput(val, fallback = '') {
+        let str = (val || fallback).toString().trim();
+        if (/^[=+\-@\t\r]/.test(str)) {
+          str = "'" + str;
+        }
+        return str;
+      }
+
       // Collect all 24 exact schema fields
       const studentData = {
-        id: (document.getElementById('addStuId')?.value || '').trim(),
-        name: (document.getElementById('addStuName')?.value || '').trim(),
-        fatherName: (document.getElementById('addStuFather')?.value || '').trim(),
-        motherName: (document.getElementById('addStuMother')?.value || '').trim(),
-        gender: (document.getElementById('addStuGender')?.value || '').trim(),
-        dob: (document.getElementById('addStuDob')?.value || '').trim(),
-        mobile: (document.getElementById('addStuMobile')?.value || '').trim(),
-        altMobile: (document.getElementById('addStuAltMobile')?.value || '').trim(),
-        email: (document.getElementById('addStuEmail')?.value || '').trim(),
-        address: (document.getElementById('addStuAddress')?.value || '').trim(),
-        block: (document.getElementById('addStuBlock')?.value || '').trim(),
-        district: (document.getElementById('addStuDistrict')?.value || 'Dantewada').trim(),
-        state: (document.getElementById('addStuState')?.value || 'Chhattisgarh').trim(),
-        pin: (document.getElementById('addStuPin')?.value || '494449').trim(),
-        year: (document.getElementById('addStuAcadYear')?.value || '2024-25').trim(),
-        iti: (document.getElementById('addStuItiName')?.value || '').trim(),
-        trade: (document.getElementById('addStuTradeName')?.value || '').trim(),
-        admissionDate: (document.getElementById('addStuAdmissionDate')?.value || '').trim(),
-        duration: (document.getElementById('addStuDuration')?.value || '2 Years').trim(),
-        expectedDate: (document.getElementById('addStuCompletionDate')?.value || '').trim(),
-        trainingStatus: (document.getElementById('addStuTrainStatus')?.value || 'Under Training').trim(),
-        employmentStatus: (document.getElementById('addStuEmpStatus')?.value || 'Not Applicable').trim(),
-        regNumber: (document.getElementById('addStuRegNo')?.value || '').trim(),
-        rollNumber: (document.getElementById('addStuRollNo')?.value || '').trim(),
-        govId: (document.getElementById('addStuGovRef')?.value || '').trim(),
+        id: sanitizeInput(document.getElementById('addStuId')?.value),
+        name: sanitizeInput(document.getElementById('addStuName')?.value),
+        fatherName: sanitizeInput(document.getElementById('addStuFather')?.value),
+        motherName: sanitizeInput(document.getElementById('addStuMother')?.value),
+        gender: sanitizeInput(document.getElementById('addStuGender')?.value),
+        dob: sanitizeInput(document.getElementById('addStuDob')?.value),
+        mobile: sanitizeInput(document.getElementById('addStuMobile')?.value),
+        altMobile: sanitizeInput(document.getElementById('addStuAltMobile')?.value),
+        email: sanitizeInput(document.getElementById('addStuEmail')?.value),
+        address: sanitizeInput(document.getElementById('addStuAddress')?.value),
+        block: sanitizeInput(document.getElementById('addStuBlock')?.value),
+        district: sanitizeInput(document.getElementById('addStuDistrict')?.value, 'Dantewada'),
+        state: sanitizeInput(document.getElementById('addStuState')?.value, 'Chhattisgarh'),
+        pin: sanitizeInput(document.getElementById('addStuPin')?.value, '494449'),
+        year: sanitizeInput(document.getElementById('addStuAcadYear')?.value, '2024-25'),
+        iti: sanitizeInput(document.getElementById('addStuItiName')?.value),
+        trade: sanitizeInput(document.getElementById('addStuTradeName')?.value),
+        admissionDate: sanitizeInput(document.getElementById('addStuAdmissionDate')?.value),
+        duration: sanitizeInput(document.getElementById('addStuDuration')?.value, '2 Years'),
+        expectedDate: sanitizeInput(document.getElementById('addStuCompletionDate')?.value),
+        trainingStatus: sanitizeInput(document.getElementById('addStuTrainStatus')?.value, 'Under Training'),
+        employmentStatus: sanitizeInput(document.getElementById('addStuEmpStatus')?.value, 'Not Applicable'),
+        regNumber: sanitizeInput(document.getElementById('addStuRegNo')?.value),
+        rollNumber: sanitizeInput(document.getElementById('addStuRollNo')?.value),
+        govId: sanitizeInput(document.getElementById('addStuGovRef')?.value),
         updated: 'Just now'
       };
 

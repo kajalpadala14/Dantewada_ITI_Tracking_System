@@ -121,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Render Table depending on tab
   function renderCurrentTab(searchQuery = '') {
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
     const q = searchQuery.toLowerCase().trim();
 
     if (currentTab === 'iti') {
@@ -153,18 +154,18 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         adminTableBody.innerHTML = filtered.map(item => `
           <tr>
-            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id || '—'}</td>
-            <td style="font-weight: 500; font-size: 13px;">${item.name || '—'}</td>
-            <td style="font-size: 13px; color: var(--text-muted);">${item.type || 'Government'}</td>
-            <td style="font-size: 13px;">${item.block || '—'}</td>
-            <td style="font-size: 13px;">${item.district || 'Dantewada'}</td>
-            <td style="font-size: 13px;">${item.contactPerson || '—'}</td>
-            <td style="font-size: 13px;">${item.contactNumber || '—'}</td>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${esc(item.id) || '—'}</td>
+            <td style="font-weight: 500; font-size: 13px;">${esc(item.name) || '—'}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${esc(item.type) || 'Government'}</td>
+            <td style="font-size: 13px;">${esc(item.block) || '—'}</td>
+            <td style="font-size: 13px;">${esc(item.district) || 'Dantewada'}</td>
+            <td style="font-size: 13px;">${esc(item.contactPerson) || '—'}</td>
+            <td style="font-size: 13px;">${esc(item.contactNumber) || '—'}</td>
             <td>
-              <span class="status-badge active">● ${item.status || 'Active'}</span>
+              <span class="status-badge active">● ${esc(item.status) || 'Active'}</span>
             </td>
             <td>
-              <button class="btn-icon-pencil" title="Edit ITI" onclick="editIti('${item.id}')">
+              <button class="btn-icon-pencil" title="Edit ITI" onclick="editIti('${esc(item.id)}')">
                 <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 20h9"></path>
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
@@ -202,13 +203,13 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         adminTableBody.innerHTML = filtered.map(item => `
           <tr>
-            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id}</td>
-            <td style="font-weight: 600; font-size: 13px;">${item.name}</td>
-            <td style="font-size: 13px;">${item.start}</td>
-            <td style="font-size: 13px;">${item.end}</td>
-            <td style="font-size: 13px; color: var(--text-muted);">${item.desc}</td>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${esc(item.id)}</td>
+            <td style="font-weight: 600; font-size: 13px;">${esc(item.name)}</td>
+            <td style="font-size: 13px;">${esc(item.start)}</td>
+            <td style="font-size: 13px;">${esc(item.end)}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${esc(item.desc)}</td>
             <td>
-              <span class="status-badge ${item.status === 'Active' ? 'active' : 'completed'}">● ${item.status}</span>
+              <span class="status-badge ${item.status === 'Active' ? 'active' : 'completed'}">● ${esc(item.status)}</span>
             </td>
             <td>
               <button class="btn-icon-pencil" title="Edit Academic Year">
@@ -250,13 +251,13 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         adminTableBody.innerHTML = filtered.map(item => `
           <tr>
-            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.code || '—'}</td>
-            <td style="font-weight: 600; font-size: 13px;">${item.name || '—'}</td>
-            <td style="font-size: 13px;">${item.type || 'Engineering'}</td>
-            <td style="font-size: 13px;">${item.duration || '1-2 Years'}</td>
-            <td style="font-size: 13px; color: var(--text-muted);">${item.itis || 'District ITIs'}</td>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${esc(item.code) || '—'}</td>
+            <td style="font-weight: 600; font-size: 13px;">${esc(item.name) || '—'}</td>
+            <td style="font-size: 13px;">${esc(item.type) || 'Engineering'}</td>
+            <td style="font-size: 13px;">${esc(item.duration) || '1-2 Years'}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${esc(item.itis) || 'District ITIs'}</td>
             <td>
-              <span class="status-badge active">● ${item.status || 'Active'}</span>
+              <span class="status-badge active">● ${esc(item.status) || 'Active'}</span>
             </td>
             <td>
               <button class="btn-icon-pencil" title="Edit Trade">
@@ -298,13 +299,13 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         adminTableBody.innerHTML = filtered.map(item => `
           <tr>
-            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${item.id || '—'}</td>
-            <td style="font-weight: 600; font-size: 13px;">${item.name || '—'}</td>
-            <td style="font-size: 13px; color: #0284c7;">${item.email || '—'}</td>
-            <td style="font-size: 13px;">${item.role || 'Admin'}</td>
-            <td style="font-size: 13px; color: var(--text-muted);">${item.branch || 'Directorate'}</td>
+            <td style="font-weight: 600; color: #0284c7; font-size: 13px;">${esc(item.id) || '—'}</td>
+            <td style="font-weight: 600; font-size: 13px;">${esc(item.name) || '—'}</td>
+            <td style="font-size: 13px; color: #0284c7;">${esc(item.email) || '—'}</td>
+            <td style="font-size: 13px;">${esc(item.role) || 'Admin'}</td>
+            <td style="font-size: 13px; color: var(--text-muted);">${esc(item.branch) || 'Directorate'}</td>
             <td>
-              <span class="status-badge active">● ${item.status || 'Active'}</span>
+              <span class="status-badge active">● ${esc(item.status) || 'Active'}</span>
             </td>
             <td>
               <button class="btn-icon-pencil" title="Edit User">

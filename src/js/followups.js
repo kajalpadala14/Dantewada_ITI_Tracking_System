@@ -76,21 +76,23 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     data.forEach(item => {
       const badgeClass = item.status === 'Employed' ? 'employed' : 'seeking-work';
       const row = document.createElement('tr');
       row.innerHTML = `
-        <td style="font-weight: 600; color: #0f172a;">${item.student}</td>
-        <td>${item.iti}</td>
+        <td style="font-weight: 600; color: #0f172a;">${esc(item.student)}</td>
+        <td>${esc(item.iti)}</td>
         <td>
-          <span class="status-badge ${badgeClass}">${item.status}</span>
+          <span class="status-badge ${badgeClass}">${esc(item.status)}</span>
         </td>
-        <td>${item.lastFollowup}</td>
-        <td>${item.contactMode}</td>
-        <td>${item.remarks}</td>
-        <td>${item.nextFollowup}</td>
+        <td>${esc(item.lastFollowup)}</td>
+        <td>${esc(item.contactMode)}</td>
+        <td>${esc(item.remarks)}</td>
+        <td>${esc(item.nextFollowup)}</td>
         <td class="text-right">
-          <span class="link-action-text btn-view-followup" data-name="${item.student}">
+          <span class="link-action-text btn-view-followup" data-name="${esc(item.student)}">
             View details &rsaquo;
           </span>
         </td>
@@ -164,42 +166,44 @@ document.addEventListener('DOMContentLoaded', () => {
     const item = followupsData.find(r => r.student === studentName);
     if (!item || !modalBody) return;
 
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     modalBody.innerHTML = `
       <div class="modal-detail-row">
         <span class="detail-label">Student Name:</span>
-        <span class="detail-value">${item.student}</span>
+        <span class="detail-value">${esc(item.student)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">ITI Institution:</span>
-        <span class="detail-value">${item.iti}</span>
+        <span class="detail-value">${esc(item.iti)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Employment Status:</span>
-        <span class="status-badge ${item.status === 'Employed' ? 'employed' : 'seeking-work'}">${item.status}</span>
+        <span class="status-badge ${item.status === 'Employed' ? 'employed' : 'seeking-work'}">${esc(item.status)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Last Follow-Up Date:</span>
-        <span class="detail-value">${item.lastFollowup}</span>
+        <span class="detail-value">${esc(item.lastFollowup)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Contact Mode:</span>
-        <span class="detail-value">${item.contactMode}</span>
+        <span class="detail-value">${esc(item.contactMode)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Remarks / Action Taken:</span>
-        <span class="detail-value">${item.remarks}</span>
+        <span class="detail-value">${esc(item.remarks)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Scheduled Next Follow-Up:</span>
-        <span class="detail-value" style="color: #1d70b8;">${item.nextFollowup}</span>
+        <span class="detail-value" style="color: #1d70b8;">${esc(item.nextFollowup)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Counselor / Officer:</span>
-        <span class="detail-value">${item.counselor}</span>
+        <span class="detail-value">${esc(item.counselor)}</span>
       </div>
       <div class="modal-detail-row">
         <span class="detail-label">Student Mobile:</span>
-        <span class="detail-value">${item.phone}</span>
+        <span class="detail-value">${esc(item.phone)}</span>
       </div>
     `;
 

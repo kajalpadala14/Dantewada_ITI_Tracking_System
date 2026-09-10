@@ -68,18 +68,20 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
     records.forEach(row => {
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td style="font-weight: 600; color: var(--text-heading); font-size: 13px;">${row.id}</td>
-        <td style="font-weight: 500; font-size: 13px;">${row.name}</td>
-        <td style="font-size: 13px;">${row.iti}</td>
-        <td style="font-size: 13px;">${row.trade}</td>
+        <td style="font-weight: 600; color: var(--text-heading); font-size: 13px;">${esc(row.id)}</td>
+        <td style="font-weight: 500; font-size: 13px;">${esc(row.name)}</td>
+        <td style="font-size: 13px;">${esc(row.iti)}</td>
+        <td style="font-size: 13px;">${esc(row.trade)}</td>
         <td>
-          <span class="status-badge ${row.trainingBadgeClass}">${row.trainingStatus}</span>
+          <span class="status-badge ${row.trainingBadgeClass}">${esc(row.trainingStatus)}</span>
         </td>
         <td>
-          <span class="status-badge ${row.employmentBadgeClass}">${row.employmentStatus}</span>
+          <span class="status-badge ${row.employmentBadgeClass}">${esc(row.employmentStatus)}</span>
         </td>
       `;
       tableBody.appendChild(tr);
