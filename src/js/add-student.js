@@ -27,6 +27,82 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // --- Automatic Student ID Generation ---
+  const stuIdInput = document.getElementById('addStuId');
+  const btnRegenId = document.getElementById('btnRegenId');
+
+  function calculateNextStudentId() {
+    const currentYear = new Date().getFullYear();
+    const prefix = `STU-${currentYear}-`;
+    let maxSeq = 0;
+
+    try {
+      const local = JSON.parse(localStorage.getItem('iti_students_registry') || '[]');
+      const regex = new RegExp(`^STU-${currentYear}-(\\d+)$`, 'i');
+      local.forEach(s => {
+        if (s && s.id) {
+          const match = String(s.id).trim().match(regex);
+          if (match) {
+            const num = parseInt(match[1], 10);
+            if (!isNaN(num) && num > maxSeq) maxSeq = num;
+          }
+        }
+      });
+    } catch (e) {
+      console.warn('Error reading local registry for ID generation:', e);
+    }
+
+    const nextSeq = maxSeq + 1;
+    const pad = nextSeq < 1000 ? String(nextSeq).padStart(3, '0') : String(nextSeq);
+    return `${prefix}${pad}`;
+  }
+
+  function setAutoStudentId() {
+    if (stuIdInput) {
+      stuIdInput.value = calculateNextStudentId();
+    }
+  }
+
+  // Generate on initial page load
+  setAutoStudentId();
+
+  // Regenerate button event
+  if (btnRegenId) {
+    btnRegenId.addEventListener('click', () => {
+      setAutoStudentId();
+    });
+  }
+
+  // Cross-check with Google Sheets remote registry in background
+  if (window.GoogleSheetsService && typeof GoogleSheetsService.fetchStudents === 'function') {
+    GoogleSheetsService.fetchStudents().then(remoteStudents => {
+      if (Array.isArray(remoteStudents) && remoteStudents.length > 0 && stuIdInput) {
+        const currentYear = new Date().getFullYear();
+        const regex = new RegExp(`^STU-${currentYear}-(\\d+)$`, 'i');
+        let remoteMax = 0;
+        remoteStudents.forEach(s => {
+          if (s && s.id) {
+            const match = String(s.id).trim().match(regex);
+            if (match) {
+              const num = parseInt(match[1], 10);
+              if (!isNaN(num) && num > remoteMax) remoteMax = num;
+            }
+          }
+        });
+
+        if (remoteMax > 0) {
+          const match = stuIdInput.value.match(regex);
+          const currentSeq = match ? parseInt(match[1], 10) : 0;
+          if (remoteMax >= currentSeq) {
+            const nextSeq = remoteMax + 1;
+            const pad = nextSeq < 1000 ? String(nextSeq).padStart(3, '0') : String(nextSeq);
+            stuIdInput.value = `STU-${currentYear}-${pad}`;
+          }
+        }
+      }
+    }).catch(() => {});
+  }
+
   // Main Form Submit Handler
   const form = document.getElementById('mainAddStudentForm');
   const btnSave = document.getElementById('btnSaveStudent');
@@ -135,9 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.location.href = 'students.html';
       } else {
         form.reset();
-        const randId = 'STU-' + new Date().getFullYear() + '-' + Math.floor(1000 + Math.random() * 9000);
-        const idInput = document.getElementById('addStuId');
-        if (idInput) idInput.value = randId;
+        setAutoStudentId();
       }
     });
   }

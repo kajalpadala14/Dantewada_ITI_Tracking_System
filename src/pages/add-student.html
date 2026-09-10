@@ -219,8 +219,20 @@
               <!-- Row 1: Student ID, Student Name, Father Name -->
               <div class="form-grid-3">
                 <div class="form-field">
-                  <label class="form-label">Student ID *</label>
-                  <input type="text" id="addStuId" class="form-input" placeholder="e.g. STU-2025-001" required>
+                  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+                    <label class="form-label" style="margin-bottom: 0;">Student ID *</label>
+                    <span style="font-size: 11px; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 4px; font-weight: 600;">Auto-Generated</span>
+                  </div>
+                  <div style="display: flex; gap: 6px;">
+                    <input type="text" id="addStuId" class="form-input" placeholder="e.g. STU-2025-001" required readonly style="background: #f8fafc; font-weight: 600; color: #0284c7; letter-spacing: 0.5px;">
+                    <button type="button" id="btnRegenId" title="Regenerate Student ID" class="btn btn-secondary" style="padding: 0 12px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid #cbd5e1; border-radius: 6px; background: #ffffff; cursor: pointer;">
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
                 <div class="form-field">
                   <label class="form-label">Student Name *</label>
