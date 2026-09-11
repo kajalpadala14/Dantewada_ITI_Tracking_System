@@ -451,6 +451,14 @@ const GoogleSheetsService = {
    * Submit single row to Google Sheet
    */
   async submitRow(sheetTabName, dataObj) {
+    const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
+    if (!isOnline) {
+      const queue = JSON.parse(localStorage.getItem('iti_sheet_sync_queue') || '[]');
+      queue.push({ sheet: sheetTabName, data: dataObj, date: new Date().toISOString() });
+      localStorage.setItem('iti_sheet_sync_queue', JSON.stringify(queue));
+      return { success: true, queued: true, message: `Record saved locally (Offline). Will auto-sync to Google Sheet when online.` };
+    }
+
     const webAppUrl = await this.getWebAppUrl();
     if (webAppUrl) {
       try {
@@ -485,6 +493,16 @@ const GoogleSheetsService = {
    * Submit multiple rows to Google Sheet in bulk
    */
   async submitBulk(sheetTabName, rowsArray) {
+    const isOnline = typeof navigator !== 'undefined' ? navigator.onLine : true;
+    if (!isOnline) {
+      const queue = JSON.parse(localStorage.getItem('iti_sheet_sync_queue') || '[]');
+      rowsArray.forEach(r => {
+        queue.push({ sheet: sheetTabName, data: r, date: new Date().toISOString() });
+      });
+      localStorage.setItem('iti_sheet_sync_queue', JSON.stringify(queue));
+      return { success: true, queued: true, message: `${rowsArray.length} records saved locally (Offline). Will auto-sync to Google Sheet when online.` };
+    }
+
     const webAppUrl = await this.getWebAppUrl();
     if (webAppUrl) {
       try {
@@ -604,4 +622,18 @@ window.GoogleSheetsService = GoogleSheetsService;
 
 document.addEventListener('DOMContentLoaded', () => {
   GoogleSheetsService.initUI();
+});
+
+// Automatic Offline-to-Online Sync Listener
+window.addEventListener('online', () => {
+  console.log('[GoogleSheet] Network is back online! Syncing offline entries to Google Sheet...');
+  if (window.GoogleSheetsService) {
+    GoogleSheetsService.syncAllLocalToSheet().then(r => {
+      if (r && r.synced > 0) {
+        const msg = `✓ Internet restored! ${r.synced} offline student record(s) automatically synced to Google Sheet.`;
+        if (window.showToast) window.showToast(msg, 'success');
+        else console.log(msg);
+      }
+    }).catch(err => console.warn('Online auto-sync error:', err));
+  }
 });

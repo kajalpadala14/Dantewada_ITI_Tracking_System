@@ -39,12 +39,47 @@ document.addEventListener('DOMContentLoaded', () => {
     if (Array.isArray(local) && local.length > 0) itisData = local;
   } catch(e) { itisData = [...defaultItis]; }
 
-  let yearsData = [
+  const defaultYears = [
     { id: 'AY-2024', name: '2024-25', start: '01 Aug 2024', end: '31 Jul 2025', desc: 'Current Active Academic Session', status: 'Active' },
     { id: 'AY-2023', name: '2023-24', start: '01 Aug 2023', end: '31 Jul 2024', desc: 'Completed Session Records', status: 'Completed' },
     { id: 'AY-2022', name: '2022-23', start: '01 Aug 2022', end: '31 Jul 2023', desc: 'Archived Session Records', status: 'Completed' },
     { id: 'AY-2021', name: '2021-22', start: '01 Aug 2021', end: '31 Jul 2022', desc: 'Archived Session Records', status: 'Completed' }
   ];
+
+  let yearsData = [...defaultYears];
+  try {
+    const localYears = JSON.parse(localStorage.getItem('iti_admin_years') || '[]');
+    if (Array.isArray(localYears) && localYears.length > 0) {
+      yearsData = localYears;
+    } else {
+      localStorage.setItem('iti_admin_years', JSON.stringify(defaultYears));
+    }
+  } catch(e) {
+    yearsData = [...defaultYears];
+  }
+
+  function formatDateForDisplay(dateStr) {
+    if (!dateStr) return '';
+    if (/^\d{1,2}\s+[A-Za-z]{3}\s+\d{4}$/.test(dateStr.trim())) return dateStr.trim();
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = months[d.getMonth()];
+    const year = d.getFullYear();
+    return `${day} ${month} ${year}`;
+  }
+
+  function formatDateForInput(dateStr) {
+    if (!dateStr) return '';
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr.trim())) return dateStr.trim();
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
 
   const defaultTrades = [
     { id: 'TRD-01', name: 'Electrician', code: 'ELEC-01', duration: '2 Years', iti: 'Govt. ITI Dantewada', status: 'Active' },
@@ -125,6 +160,98 @@ document.addEventListener('DOMContentLoaded', () => {
 
   if (btnModalSave) {
     btnModalSave.addEventListener('click', () => {
+      // Handle Academic Year Save
+      const acadYearInput = document.getElementById('modalAcadYear');
+      if (acadYearInput) {
+        const idInput = document.getElementById('modalAcadId');
+        const statusSelect = document.getElementById('modalAcadStatus');
+        const startInput = document.getElementById('modalAcadStart');
+        const endInput = document.getElementById('modalAcadEnd');
+        const descInput = document.getElementById('modalAcadDesc');
+
+        const editId = idInput ? idInput.value.trim() : '';
+        const name = (acadYearInput.value || '').trim();
+        const status = statusSelect ? statusSelect.value : 'Active';
+        const start = startInput ? startInput.value : '';
+        const end = endInput ? endInput.value : '';
+        const desc = descInput ? (descInput.value || '').trim() : '';
+
+        // 1. Required field validation
+        if (!name) {
+          alert('Please enter an Academic Year (e.g. 2025-26).');
+          acadYearInput.focus();
+          return;
+        }
+
+        if (!start) {
+          alert('Please select a valid Start Date.');
+          if (startInput) startInput.focus();
+          return;
+        }
+
+        if (!end) {
+          alert('Please select a valid End Date.');
+          if (endInput) endInput.focus();
+          return;
+        }
+
+        // 2. Date consistency check
+        const startDateObj = new Date(start);
+        const endDateObj = new Date(end);
+        if (startDateObj.getTime() >= endDateObj.getTime()) {
+          alert('Validation Error: Start Date must be earlier than End Date.');
+          if (startInput) startInput.focus();
+          return;
+        }
+
+        // 3. Duplicate check (case-insensitive name comparison against other records)
+        const isDuplicate = yearsData.some(y =>
+          y.name.trim().toLowerCase() === name.toLowerCase() && y.id !== editId
+        );
+        if (isDuplicate) {
+          alert(`Duplicate Error: An Academic Session with the year "${name}" already exists.`);
+          acadYearInput.focus();
+          return;
+        }
+
+        if (editId) {
+          // Update existing
+          const idx = yearsData.findIndex(y => y.id === editId);
+          if (idx >= 0) {
+            yearsData[idx] = {
+              ...yearsData[idx],
+              name,
+              status,
+              start: formatDateForDisplay(start),
+              end: formatDateForDisplay(end),
+              desc: desc || (status === 'Active' ? 'Current Active Academic Session' : `${status} Session Records`)
+            };
+          }
+        } else {
+          // Add new
+          let cleanId = 'AY-' + (name.match(/\d{4}/)?.[0] || String(Date.now()).slice(-4));
+          if (yearsData.some(y => y.id === cleanId)) {
+            cleanId = 'AY-' + Date.now();
+          }
+          const newSession = {
+            id: cleanId,
+            name,
+            status,
+            start: formatDateForDisplay(start),
+            end: formatDateForDisplay(end),
+            desc: desc || (status === 'Active' ? 'Current Active Academic Session' : `${status} Session Records`)
+          };
+          yearsData.unshift(newSession);
+        }
+
+        // Persist to localStorage
+        localStorage.setItem('iti_admin_years', JSON.stringify(yearsData));
+        closeModal();
+        renderCurrentTab();
+        alert(`✓ Academic Session "${name}" saved successfully!`);
+        return;
+      }
+
       alert('Record saved successfully!');
       closeModal();
     });
@@ -223,7 +350,7 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="status-badge ${item.status === 'Active' ? 'active' : 'completed'}">● ${esc(item.status)}</span>
             </td>
             <td>
-              <button class="btn-icon-pencil" title="Edit Academic Year">
+              <button class="btn-icon-pencil" title="Edit Academic Year" onclick="editYear('${esc(item.id)}')">
                 <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M12 20h9"></path>
                   <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
@@ -410,29 +537,7 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         `);
       } else if (currentTab === 'year') {
-        openModal('Add Academic Session', `
-          <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
-            <div class="form-field">
-              <label class="form-label">Academic Year</label>
-              <input type="text" class="form-input" placeholder="e.g. 2025-26">
-            </div>
-            <div class="form-field">
-              <label class="form-label">Session Status</label>
-              <select class="form-select">
-                <option>Active</option>
-                <option>Upcoming</option>
-              </select>
-            </div>
-            <div class="form-field">
-              <label class="form-label">Start Date</label>
-              <input type="date" class="form-input" value="2025-08-01">
-            </div>
-            <div class="form-field">
-              <label class="form-label">End Date</label>
-              <input type="date" class="form-input" value="2026-07-31">
-            </div>
-          </div>
-        `);
+        openAcademicYearModal(null);
       } else if (currentTab === 'trade') {
         openModal('Add New Trade', `
           <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
@@ -495,6 +600,51 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Academic Year Modal and Edit Helpers
+  function openAcademicYearModal(item = null) {
+    const isEdit = !!item;
+    const title = isEdit ? `Edit Academic Session - ${item.name}` : 'Add Academic Session';
+    const startVal = item ? formatDateForInput(item.start) : '2025-08-01';
+    const endVal = item ? formatDateForInput(item.end) : '2026-07-31';
+    const esc = window.escapeHtml || (v => v == null ? '' : String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'));
+
+    openModal(title, `
+      <div class="form-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+        <input type="hidden" id="modalAcadId" value="${isEdit ? esc(item.id) : ''}">
+        <div class="form-field">
+          <label class="form-label">Academic Year *</label>
+          <input type="text" class="form-input" id="modalAcadYear" placeholder="e.g. 2025-26" value="${isEdit ? esc(item.name) : ''}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Session Status</label>
+          <select class="form-select" id="modalAcadStatus">
+            <option value="Active" ${isEdit && item.status === 'Active' ? 'selected' : ''}>Active</option>
+            <option value="Upcoming" ${isEdit && item.status === 'Upcoming' ? 'selected' : ''}>Upcoming</option>
+            <option value="Completed" ${isEdit && item.status === 'Completed' ? 'selected' : ''}>Completed</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Start Date *</label>
+          <input type="date" class="form-input" id="modalAcadStart" value="${startVal}">
+        </div>
+        <div class="form-field">
+          <label class="form-label">End Date *</label>
+          <input type="date" class="form-input" id="modalAcadEnd" value="${endVal}">
+        </div>
+        <div class="form-field" style="grid-column: span 2;">
+          <label class="form-label">Description</label>
+          <input type="text" class="form-input" id="modalAcadDesc" placeholder="e.g. Current Active Academic Session" value="${isEdit ? esc(item.desc || '') : ''}">
+        </div>
+      </div>
+    `);
+  }
+
+  window.editYear = function(id) {
+    const item = yearsData.find(y => y.id === id);
+    if (!item) return;
+    openAcademicYearModal(item);
+  };
 
   // Window edit helper
   window.editIti = function(id) {

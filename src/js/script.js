@@ -363,8 +363,65 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Academic Year Selector Filter in Dashboard
+  // Academic Year Selector Filter in Dashboard (Dynamically Populated)
   const academicYearSelect = document.getElementById('academicYearSelect');
+
+  function populateAcademicYearSelect() {
+    if (!academicYearSelect) return;
+
+    let savedYears = [];
+    try {
+      savedYears = JSON.parse(localStorage.getItem('iti_admin_years') || '[]');
+    } catch(e) {
+      savedYears = [];
+    }
+
+    if (!Array.isArray(savedYears) || savedYears.length === 0) {
+      savedYears = [
+        { name: '2024-25' },
+        { name: '2023-24' },
+        { name: '2022-23' },
+        { name: '2021-22' }
+      ];
+    }
+
+    const currentVal = academicYearSelect.value || 'All';
+    academicYearSelect.innerHTML = '<option value="All">All Academic Years</option>';
+
+    const seenYears = new Set();
+    savedYears.forEach(y => {
+      const yName = (y && y.name) ? String(y.name).trim() : '';
+      if (yName && !seenYears.has(yName)) {
+        seenYears.add(yName);
+        const opt = document.createElement('option');
+        opt.value = yName;
+        opt.textContent = `Academic year: ${yName}`;
+        academicYearSelect.appendChild(opt);
+      }
+    });
+
+    if (Array.isArray(allStudents)) {
+      allStudents.forEach(s => {
+        const sy = (s && s.year) ? String(s.year).trim() : '';
+        if (sy && !seenYears.has(sy)) {
+          seenYears.add(sy);
+          const opt = document.createElement('option');
+          opt.value = sy;
+          opt.textContent = `Academic year: ${sy}`;
+          academicYearSelect.appendChild(opt);
+        }
+      });
+    }
+
+    if (seenYears.has(currentVal) || currentVal === 'All') {
+      academicYearSelect.value = currentVal;
+    } else {
+      academicYearSelect.value = 'All';
+    }
+  }
+
+  populateAcademicYearSelect();
+
   if (academicYearSelect) {
     academicYearSelect.addEventListener('change', (e) => {
       updateDashboard(e.target.value);
@@ -382,6 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
         allStudents.forEach(s => studentMap.set(s.id, s));
         liveRows.forEach(s => studentMap.set(s.id, s));
         allStudents = Array.from(studentMap.values());
+        populateAcademicYearSelect();
         updateDashboard(academicYearSelect ? academicYearSelect.value : 'All');
       }
     }).catch(err => console.log('Dashboard live fetch info:', err.message));
