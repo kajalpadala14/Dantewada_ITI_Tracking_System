@@ -393,8 +393,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <option value="Geedam">Geedam</option>
                 <option value="Katekalyan">Katekalyan</option>
                 <option value="Kuakonda">Kuakonda</option>
-                <option value="Bacheli">Bacheli</option>
-                <option value="Kirandul">Kirandul</option>
               </select>
             </div>
             <div class="form-field">
@@ -515,7 +513,12 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
         <div class="form-field">
           <label class="form-label">Block</label>
-          <input type="text" class="form-input" value="${item.block}">
+          <select class="form-select">
+            <option value="Dantewada" ${item.block === 'Dantewada' ? 'selected' : ''}>Dantewada</option>
+            <option value="Geedam" ${item.block === 'Geedam' ? 'selected' : ''}>Geedam</option>
+            <option value="Katekalyan" ${item.block === 'Katekalyan' ? 'selected' : ''}>Katekalyan</option>
+            <option value="Kuakonda" ${item.block === 'Kuakonda' ? 'selected' : ''}>Kuakonda</option>
+          </select>
         </div>
         <div class="form-field">
           <label class="form-label">District</label>
