@@ -582,96 +582,14 @@ const GoogleSheetsService = {
   },
 
   /**
-   * Render Topbar "Connected to Google Sheet" badge and sync button
+   * Background sync queue & local records without rendering topbar badge
    */
   async initUI() {
-    const topbarRight = document.querySelector('.topbar-right');
-    if (!topbarRight || document.getElementById('sheetConnectionBadge')) return;
-
     if (window.loadConfigPromise) {
       try { await window.loadConfigPromise; } catch (e) {}
     }
 
     const webAppUrl = this.getWebAppUrlSync();
-    const container = document.createElement('div');
-    container.id = 'sheetConnectionBadge';
-    container.style.cssText = `
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    `;
-
-    const badge = document.createElement('a');
-    badge.href = APP_CONFIG.GOOGLE_SHEET.URL;
-    badge.target = '_blank';
-    badge.title = 'Click to open connected Google Sheet (ITI_System_Traking)';
-    badge.style.cssText = `
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 5px 10px;
-      background: #ecfdf5;
-      color: #065f46;
-      border: 1px solid #a7f3d0;
-      border-radius: 20px;
-      font-size: 11px;
-      font-weight: 600;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      cursor: pointer;
-    `;
-    badge.innerHTML = `
-      <span style="width: 7px; height: 7px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
-      <span>Google Sheet Connected</span>
-      <svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-        <polyline points="15 3 21 3 21 9"></polyline>
-        <line x1="10" y1="14" x2="21" y2="3"></line>
-      </svg>
-    `;
-    badge.addEventListener('mouseenter', () => { badge.style.background = '#d1fae5'; });
-    badge.addEventListener('mouseleave', () => { badge.style.background = '#ecfdf5'; });
-
-    const btnConfig = document.createElement('button');
-    btnConfig.title = webAppUrl ? 'Google Apps Script Live Sync Active (Click to update URL)' : 'Click to connect Google Apps Script Web App for direct 2-way sync';
-    btnConfig.style.cssText = `
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: ${webAppUrl ? '#ecfdf5' : '#fffbeb'};
-      color: ${webAppUrl ? '#047857' : '#b45309'};
-      border: 1px solid ${webAppUrl ? '#a7f3d0' : '#fde68a'};
-      cursor: pointer;
-      font-size: 11px;
-      transition: all 0.2s ease;
-    `;
-    btnConfig.innerHTML = `
-      <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2">
-        <circle cx="12" cy="12" r="3"></circle>
-        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
-      </svg>
-    `;
-    btnConfig.addEventListener('click', async () => {
-      const current = GoogleSheetsService.getWebAppUrlSync();
-      const entered = prompt(
-        'Google Apps Script Web App URL for direct live write access to Google Sheets:\n\n(Deploy from Google Sheets > Extensions > Apps Script > Deploy > Web App > Who has access: Anyone)',
-        current || ''
-      );
-      if (entered !== null) {
-        localStorage.setItem('iti_apps_script_url', entered.trim());
-        APP_CONFIG.GOOGLE_SHEET.APPS_SCRIPT_WEB_APP_URL = entered.trim();
-        const res = await GoogleSheetsService.syncAllLocalToSheet();
-        alert(entered.trim() ? `✓ Apps Script URL saved! Synced ${res.synced} records.` : 'Apps Script URL cleared.');
-        location.reload();
-      }
-    });
-
-    container.appendChild(badge);
-    container.appendChild(btnConfig);
-    topbarRight.insertBefore(container, topbarRight.firstChild);
 
     // If webAppUrl is set, try background syncing queue & local records
     if (webAppUrl) {
